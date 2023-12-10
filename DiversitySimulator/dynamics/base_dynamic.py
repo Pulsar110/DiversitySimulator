@@ -1,12 +1,16 @@
+from __future__ import annotations
 from abc import ABC, abstractmethod 
-import numpy as np
+from dataclasses import dataclass 
 
-from graph_envs.base_simulator import BaseSimulator
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:   
+    from graph_envs.base_simulator import BaseSimulator
 
 '''
     World dynamics captures the rules for moving the vertices in the world. 
 '''
 
+@dataclass
 class DynamicsOutput:
     '''
         Output for dynamics for the vectors that moved
@@ -15,8 +19,8 @@ class DynamicsOutput:
             past_locations: list of past locations indices
             new_locations: list of new locations indices
     '''
-    past_locations: np.array = None
-    new_locations: np.array = None
+    past_locations: list = None
+    new_locations: list = None
 
 
 class BaseDynamics(ABC):
