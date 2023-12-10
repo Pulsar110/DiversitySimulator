@@ -1,10 +1,13 @@
+from __future__ import annotations
 import numpy as np 
 import matplotlib.pyplot as plt
 import copy
-from typing import Union
 
 from graph_envs.base_simulator import BaseSimulator, Vertex
-from dynamics.base_dynamic import DynamicsOutput
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from dynamics.base_dynamic import DynamicsOutput
 
 
 class GridWorld(BaseSimulator):
@@ -41,14 +44,20 @@ class GridWorld(BaseSimulator):
             location_1D = location_1D % cur_size
         location_nD[-1] = location_1D
         return location_nD
+    
+    def get_vertice(self, loc_idx: list):
+        return Vertex(
+                loc_idx=loc_idx,
+                type=self.get_vertex_type(loc_idx)
+            )
 
-    def get_vertex_type(self, loc_idx: int|tuple|list):
+    def get_vertex_type(self, loc_idx: list):
         v_type = self.world
         for idx in loc_idx:
             v_type = v_type[idx]
         return v_type
 
-    def set_vertex_type(self, given_type: int, loc_idx: int|tuple|list):
+    def set_vertex_type(self, given_type: int, loc_idx: list):
         v_type = self.world
         for idx in loc_idx[:-1]:
             v_type = v_type[idx]
@@ -59,16 +68,10 @@ class GridWorld(BaseSimulator):
             Sample vertices in 1D and convert locations into n-D
         '''
         chosen_location_1Ds = np.random.choice(self.num_vertices, num_samples, replace=False)
-        loc_idx_list = [list(map(int, self.__get_index(location_1D))) 
+        loc_idx_list = [list(map(int, self.__convert_index(location_1D))) 
                         for location_1D in chosen_location_1Ds] 
-        return [
-            Vertex(
-                loc_idx=loc_idx,
-                type=self.get_vertex_type(loc_idx)
-            ) for loc_idx in loc_idx_list
-        ]
+        return [self.get_vertice(loc_idx) for loc_idx in loc_idx_list]
     
-
     def _wraped_index(self, loc_idx):
         '''
             Wrap the location index. 

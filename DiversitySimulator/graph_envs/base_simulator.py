@@ -1,14 +1,18 @@
-from abc import ABC, abstractmethod 
+from __future__ import annotations
+from abc import ABC, abstractmethod
+from dataclasses import dataclass 
 
-from dynamics.base_dynamic import BaseDynamics, DynamicsOutput
+from typing import TYPE_CHECKING, Callable, Any
+if TYPE_CHECKING:
+    from dynamics.base_dynamic import BaseDynamics, DynamicsOutput
 
-
+@dataclass
 class Vertex:
     '''
         A vertex in the world.
     '''
-    loc_idx: tuple = None
-    type: int = -1
+    loc_idx: list = None
+    type: Any = None
 
 
 class BaseSimulator(ABC):
@@ -16,7 +20,7 @@ class BaseSimulator(ABC):
     def __init__(self, 
                  num_vertices: int, 
                  num_types: int, 
-                 utility_func: function,
+                 utility_func: Callable,
                  dynamics: BaseDynamics,
                  window_size: int = 1,
                  verbosity: int = 0):
@@ -49,7 +53,7 @@ class BaseSimulator(ABC):
         return None
 
     @abstractmethod
-    def get_vertice(self, loc_idx: int|tuple|list):
+    def get_vertice(self, loc_idx: list):
         '''
             Get a vertice at some location in the world.
 
@@ -75,7 +79,7 @@ class BaseSimulator(ABC):
         return None
     
     @abstractmethod
-    def get_vertex_type(self, loc_idx: int|tuple|list):
+    def get_vertex_type(self, loc_idx: list):
         '''
             Get the type of a vertex at loc_idx.
 
@@ -85,7 +89,7 @@ class BaseSimulator(ABC):
         return None
 
     @abstractmethod
-    def set_vertex_type(self, given_type: int|object, loc_idx: int|tuple|list):
+    def set_vertex_type(self, given_type: Any, loc_idx: list):
         '''
             Set a type to a vertex at loc_idx.
 
@@ -131,27 +135,24 @@ class BaseSimulator(ABC):
         '''
         type_list = [self.get_vertex_type(loc_idx) for loc_idx in dynamic_output.past_locations]
         for new_loc, past_loc, to_type in zip(dynamic_output.new_locations, dynamic_output.past_locations, type_list):
-            if self.verbosity > 1:
+            if self.verbosity == 1:
                 print('Moving vertex at', past_loc, 'to', new_loc, 'type=', to_type)
-            self.set_vertex_type(new_loc, to_type)
+            self.set_vertex_type(to_type, new_loc)
 
     def step(self):
         '''
             Run the simulation for one step.
 
             Return:
-                True if converged.
+                True changed.
         '''
         response = self.dynamics.step(self)
         if response is not None:
             self.move_vertices(response)
             if self.verbosity > 0:
                 print(self.world)
-            return False
-        
-        if self.verbosity > 0:
-            print('CONVERGED.')
-        return True
+            return True
+        return False
         
     @abstractmethod
     def compute_metric_summary(self):
