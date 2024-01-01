@@ -2,11 +2,11 @@ from __future__ import annotations
 import numpy as np
 
 from dynamics.base_dynamic import BaseDynamics, DynamicsOutput
-from graph_envs.base_simulator import Vertex
+from graph_envs.base_graph_env import Vertex
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:   
-    from graph_envs.base_simulator import BaseSimulator
+    from graph_envs.base_graph_env import BaseGraphEnvironment
 
 
 class RandomSwapper(BaseDynamics):
@@ -23,7 +23,7 @@ class RandomSwapper(BaseDynamics):
         self.pair_size = 2 # pair_size
 
 
-    def __can_swap(self, v1: Vertex, v2: Vertex, env: BaseSimulator):
+    def __can_swap(self, v1: Vertex, v2: Vertex, env: BaseGraphEnvironment):
         '''
             Can swap the colors at two locations 
             if both improve their utilities.
@@ -44,7 +44,7 @@ class RandomSwapper(BaseDynamics):
             return True
         return False
 
-    def step(self, env: BaseSimulator):
+    def step(self, env: BaseGraphEnvironment):
         samples = env.sample_vertices(self.pair_size)
         if self.__can_swap(samples[0], samples[1], env):
             loc_idx_list = [v.loc_idx for v in samples]

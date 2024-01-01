@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:   
-    from graph_envs.base_simulator import BaseSimulator
+    from graph_envs.base_graph_env import BaseGraphEnvironment
 
 '''
     World dynamics captures the rules for moving the vertices in the world. 
@@ -26,7 +26,7 @@ class DynamicsOutput:
 class BaseDynamics(ABC):
 
     @abstractmethod
-    def step(self, env: BaseSimulator):
+    def step(self, env: BaseGraphEnvironment):
         '''
             Run the dynamics for one step.
 

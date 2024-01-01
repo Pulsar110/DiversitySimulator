@@ -4,14 +4,14 @@ import matplotlib.pyplot as plt
 import copy
 from itertools import combinations_with_replacement
 
-from graph_envs.base_simulator import BaseSimulator, Vertex
+from graph_envs.base_graph_env import BaseGraphEnvironment, Vertex
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from dynamics.base_dynamic import DynamicsOutput
 
 
-class GridWorld(BaseSimulator):
+class GridWorld(BaseGraphEnvironment):
     '''
         Grid world that can be representated as an n-dimensional array (np.ndarray).
         With all vertices having the same degree.
@@ -37,6 +37,8 @@ class GridWorld(BaseSimulator):
             Convert 1D location index to n-D location index. 
         '''						
         l = len(self.world_size)
+        if l == 1:
+            return location_1D
         location_nD = np.zeros(l)
 
         for i in range(l-1):
@@ -46,23 +48,32 @@ class GridWorld(BaseSimulator):
         location_nD[-1] = location_1D
         return location_nD
     
-    def get_vertice(self, loc_idx: list):
+    def get_vertice(self, loc_idx: int|list):
+        if isinstance(loc_idx, int):
+            loc_idx = self.__convert_index(loc_idx)
         return Vertex(
                 loc_idx=loc_idx,
                 type=self.get_vertex_type(loc_idx)
             )
 
-    def get_vertex_type(self, loc_idx: list):
+    def get_vertex_type(self, loc_idx: int|list):
+        if isinstance(loc_idx, int):
+            loc_idx = self.__convert_index(loc_idx)
         v_type = self.world
         for idx in loc_idx:
             v_type = v_type[idx]
         return v_type
 
-    def set_vertex_type(self, given_type: int, loc_idx: list):
+    def set_vertex_type(self, given_type: int, loc_idx: int|list):
+        if isinstance(loc_idx, int):
+            loc_idx = self.__convert_index(loc_idx)
         v_type = self.world
         for idx in loc_idx[:-1]:
             v_type = v_type[idx]
         v_type[loc_idx[-1]] = given_type
+
+    def get_max_degree(self):
+        return self.vertex_degree
 
     def sample_vertices(self, num_samples: int = 1):
         '''
@@ -73,7 +84,7 @@ class GridWorld(BaseSimulator):
                         for location_1D in chosen_location_1Ds] 
         return [self.get_vertice(loc_idx) for loc_idx in loc_idx_list]
     
-    def _wraped_index(self, loc_idx):
+    def _wraped_index(self, loc_idx: list):
         '''
             Wrap the location index. 
         '''
@@ -91,6 +102,7 @@ class GridWorld(BaseSimulator):
             It will iterate through all possible neighbors within the 
             `self.window_size` until it reaches `vertex_degree` number of
             visited neighbors. 
+            It also counts the input vertex's type. 
 
             Args:
                 vertex: reference vertex
@@ -147,7 +159,7 @@ class GridWorld(BaseSimulator):
         '''
         loc_idx = vertex.loc_idx
         neigh_vector = [0]*self.num_types
-        neigh_vector[vertex.type] += 1
+        # neigh_vector[vertex.type] += 1 (this would yield the closed neighbourhood)
         num_idx = len(loc_idx)
 
         degree = 0
@@ -196,4 +208,4 @@ class GridWorld(BaseSimulator):
     def visualize(self): # TODO
         pass
 
-    
+

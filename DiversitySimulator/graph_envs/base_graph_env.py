@@ -1,6 +1,7 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass 
+import numpy as np
 
 from typing import TYPE_CHECKING, Callable, Any
 if TYPE_CHECKING:
@@ -13,9 +14,10 @@ class Vertex:
     '''
     loc_idx: list = None
     type: Any = None
+    neigh_vector: np.array = None
 
 
-class BaseSimulator(ABC):
+class BaseGraphEnvironment(ABC):
 
     def __init__(self, 
                  num_vertices: int, 
@@ -53,7 +55,7 @@ class BaseSimulator(ABC):
         return None
 
     @abstractmethod
-    def get_vertice(self, loc_idx: list):
+    def get_vertice(self, loc_idx: Any):
         '''
             Get a vertice at some location in the world.
 
@@ -79,17 +81,18 @@ class BaseSimulator(ABC):
         return None
     
     @abstractmethod
-    def get_vertex_type(self, loc_idx: list):
+    def get_vertex_type(self, loc_idx: Any):
         '''
             Get the type of a vertex at loc_idx.
 
             Args:
-                loc_idx: location idex of the vertex
+                loc_idx: location idex of the vertex (must support 
+                         int type to support interating over all vertices)
         '''
         return None
 
     @abstractmethod
-    def set_vertex_type(self, given_type: Any, loc_idx: list):
+    def set_vertex_type(self, given_type: Any, loc_idx: Any):
         '''
             Set a type to a vertex at loc_idx.
 
@@ -98,6 +101,29 @@ class BaseSimulator(ABC):
                 loc_idx: location idex of the vertex
         '''
         pass
+
+    @abstractmethod
+    def get_max_degree(self):
+        '''
+            Get the max degree in the graph
+
+            Return:
+                max degree 
+        '''
+        return None
+
+    ### Support iteration over all vertices
+    def __iter__(self):
+        self.__current = 0
+        return self
+
+    def __next__(self): 
+        if self.__current >= self.num_vertices:
+            raise StopIteration
+        else:
+            self.__current += 1
+            return self.get_vertice(self.__current)
+    ### end
 
     @abstractmethod
     def get_neighborhood_vector(self, vertex: Vertex):
@@ -115,14 +141,25 @@ class BaseSimulator(ABC):
         '''
         return None
     
-    def compute_utility(self, vertex: Vertex):
+    def compute_utility(self, vertex: Vertex, utility_func: Callable = None):
         '''
             Compute the utility mesure of a vertex. 
             This method is used for the dynamics. 
             Therefore, the input must be standardized.
+
+            Args:
+                vertex: reference vertex
+                utility_func: (optional) the utility function to use
+                              if None, use `self._utility_func`
+
+            Return:
+                the scalar utility measure
         '''
-        neigh_vector = self.get_neighborhood_vector(vertex)
-        return self._utility_func(neigh_vector)
+        if vertex.neigh_vector is None:
+            vertex.neigh_vector = self.get_neighborhood_vector(vertex)
+        if utility_func is None:
+            return self._utility_func(vertex)
+        return utility_func(vertex)
     
     def move_vertices(self, dynamic_output: DynamicsOutput):
         '''
