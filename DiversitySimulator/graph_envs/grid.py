@@ -17,7 +17,12 @@ class GridWorld(BaseGraphEnvironment):
         With all vertices having the same degree.
     '''
 
-    def __init__(self, world_size:int|list, *args, vertex_degree:int=4, **kwargs):
+    def __init__(self, 
+                 world_size:int|list, 
+                 *args, 
+                 vertex_degree:int=4, 
+                 wrapped_indices:bool|list=True, 
+                 **kwargs):
         '''
             Args:
                 world_size: the size of the world (ndarray)
@@ -27,6 +32,11 @@ class GridWorld(BaseGraphEnvironment):
             world_size = [world_size]
         self.world_size = world_size
         self.vertex_degree = vertex_degree
+        if isinstance(wrapped_indices, bool):
+            wrapped_indices = [wrapped_indices]*len(world_size)
+        else:
+            assert(len(wrapped_indices) == len(world_size))
+        self.wrapped_indices = wrapped_indices
         super().__init__(np.prod(self.world_size), *args, **kwargs)
         
     def _init_world(self):
@@ -48,7 +58,7 @@ class GridWorld(BaseGraphEnvironment):
         location_nD[-1] = location_1D
         return location_nD
     
-    def get_vertice(self, loc_idx: int|list):
+    def get_vertex(self, loc_idx: int|list):
         if isinstance(loc_idx, int):
             loc_idx = self.__convert_index(loc_idx)
         return Vertex(
@@ -82,33 +92,36 @@ class GridWorld(BaseGraphEnvironment):
         chosen_location_1Ds = np.random.choice(self.num_vertices, num_samples, replace=False)
         loc_idx_list = [list(map(int, self.__convert_index(location_1D))) 
                         for location_1D in chosen_location_1Ds] 
-        return [self.get_vertice(loc_idx) for loc_idx in loc_idx_list]
+        return [self.get_vertex(loc_idx) for loc_idx in loc_idx_list]
     
     def _wraped_index(self, loc_idx: list):
         '''
-            Wrap the location index. 
+            Wrap the location index. Return None if it not allowed to wrap if needed.
         '''
         for i in range(len(loc_idx)):
             if loc_idx[i] < 0:
+                if not self.wrapped_indices[i]:
+                    return None
                 loc_idx[i] = self.world_size[i] + loc_idx[i]
             elif loc_idx[i] >= self.world_size[i]:
+                if not self.wrapped_indices[i]:
+                    return None
                 loc_idx[i] = loc_idx[i] - self.world_size[i]
         return loc_idx
     
-    def get_neighborhood_vector(self, vertex: Vertex):
+    def get_immediate_neighbours(self, vertex: Vertex, as_dict=False):
         '''
-            Calculate the array of types in the open neighborhood 
-            of the vertex.
-            It will iterate through all possible neighbors within the 
-            `self.window_size` until it reaches `vertex_degree` number of
+            Get the immediate neighbours of a vertex. 
+            It will iterate through all possible neighbors
+            until it reaches `vertex_degree` number of
             visited neighbors. 
-            It also counts the input vertex's type. 
-
+            
             Args:
                 vertex: reference vertex
+                as_dict: (optional) return as a dictionary with key=loc_idx
 
             Return:
-                np.array of the count for each type
+                list or dict of Vertex
             
             =================
             
@@ -153,27 +166,35 @@ class GridWorld(BaseGraphEnvironment):
                 [3, 0]
                 [1, 4]
                 [3, 4]
-                
-                final output = [3, 10, 10, 2]
             ```
         '''
         loc_idx = vertex.loc_idx
-        neigh_vector = [0]*self.num_types
-        # neigh_vector[vertex.type] += 1 (this would yield the closed neighbourhood)
         num_idx = len(loc_idx)
+        neigh_vertices = {}
+
+        def __return_neigh_vertices():
+            if as_dict:
+                return neigh_vertices
+            return neigh_vertices.values()
+    
+        def __add_vertex(cur_idx, degree):
+            cur_idx = self._wraped_index(cur_idx)
+            if cur_idx is not None:
+                v = self.get_vertex(cur_idx)
+                neigh_vertices[tuple(v.loc_idx)] = v
+                degree += 1
+            return degree
 
         degree = 0
-        for w in range(1, self.window_size+1):
+        for w in range(1, np.min(self.world_size)):
             # the +-cross part
             for i in range(num_idx):
                 for new_idx in [-w, w]:
                     cur_idx = copy.copy(loc_idx)
                     cur_idx[i] += new_idx
-                    cur_idx = self._wraped_index(cur_idx)
-                    neigh_vector[self.get_vertex_type(cur_idx)] += 1
-                    degree += 1
+                    degree = __add_vertex(cur_idx, degree)
                     if degree == self.vertex_degree: 
-                        return neigh_vector
+                        return __return_neigh_vertices()
             # the x-cross part
             for i in range(num_idx):
                 # fix one index to -w or w
@@ -194,13 +215,13 @@ class GridWorld(BaseGraphEnvironment):
                             if numbs[0] == 0 and len(numbs) == 1:
                                 continue
                             cur_idx = np.array(list(l_idx) + [new_idx] + list(r_idx)) + np.array(vertex.loc_idx)
-                            cur_idx = self._wraped_index(cur_idx.tolist())
-                            neigh_vector[self.get_vertex_type(cur_idx)] += 1
-                            degree += 1
+                            degree = __add_vertex(cur_idx.tolist(), degree)
                             if degree == self.vertex_degree: 
-                                return neigh_vector
+                                return __return_neigh_vertices()
     
-        return neigh_vector
+        if degree < self.vertex_degree: 
+            print('Warning! Only found %d degree for world size:' % degree, self.world_size)
+        return __return_neigh_vertices()
             
     def compute_metric_summary(self): # TODO
         pass

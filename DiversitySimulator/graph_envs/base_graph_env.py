@@ -10,21 +10,36 @@ if TYPE_CHECKING:
 @dataclass
 class Vertex:
     '''
-        A vertex in the world.
+        A vertex in the graph environment.
+        Args:
+            loc_idx: location indices of the vertex in the graph
+            type: the type of the vertex
+            neigh_type_vector: neighbourhood-type vector (the number 
+                               of vertex for each type in the vertex's open neighbourhood, 
+                               i.e.: excluding itself)
     '''
-    loc_idx: list = None
+    loc_idx: Any = None
     type: Any = None
-    neigh_vector: np.array = None
+    neigh_type_vector: np.array = None
 
 
 class BaseGraphEnvironment(ABC):
+    '''
+        This is the base class for an arbitrary graph environment. 
+
+        Vertices are the agents in the environment and the edges
+        are indicate their immediate neighbour. 
+        A vertex's neighbourhood consist of all its immediate neighbours (if neigh_radius=1), 
+        and the immediate meighbours of their immediate neighbours (if neigh_radius=2),
+        etc (similar pattern for neigh_radius>=3)
+    '''
 
     def __init__(self, 
                  num_vertices: int, 
                  num_types: int, 
                  utility_func: Callable,
                  dynamics: BaseDynamics,
-                 window_size: int = 1,
+                 neigh_radius: int = 1,
                  verbosity: int = 0):
         '''
             Args:
@@ -32,14 +47,14 @@ class BaseGraphEnvironment(ABC):
                 num_types: number of different types of vertices
                 utility: utility metric
                 dynamics: BaseDynamics object to model how the vectors move
-                window_size: neighborhood degree considered for the utility metrics (default = 1)
+                neigh_radius: neighbourhood radius, used for the utility metrics (default = 1)
                 verbosity: for printing debug message (default 0)
         '''
         self.num_vertices = num_vertices
         self.num_types = num_types
         self._utility_func = utility_func
         self.dynamics = dynamics
-        self.window_size = window_size
+        self.neigh_radius = neigh_radius
         self.verbosity = verbosity
 
         self.world = self._init_world()
@@ -55,15 +70,15 @@ class BaseGraphEnvironment(ABC):
         return None
 
     @abstractmethod
-    def get_vertice(self, loc_idx: Any):
+    def get_vertex(self, loc_idx: Any):
         '''
-            Get a vertice at some location in the world.
+            Get a vertex at some location in the world.
 
             Args:
                 loc_idx: a location in the world.
 
             Return:
-                The vertice at the correct location in the world.
+                The vertex at the correct location in the world.
         '''
         return None
 
@@ -121,12 +136,26 @@ class BaseGraphEnvironment(ABC):
         if self.__current >= self.num_vertices:
             raise StopIteration
         else:
+            v = self.get_vertice(self.__current)
             self.__current += 1
-            return self.get_vertice(self.__current)
+            return v
     ### end
-
+    
     @abstractmethod
-    def get_neighborhood_vector(self, vertex: Vertex):
+    def get_immediate_neighbours(self, vertex: Vertex, as_dict=False):
+        '''
+            Get the immediate neighbours of a vertex. 
+
+            Args:
+                vertex: reference vertex
+                as_dict: (optional) return as a dictionary with key=loc_idx
+
+            Return:
+                list or dict of Vertex
+        '''
+        return None
+
+    def get_neighborhood_type_vector(self, vertex: Vertex):
         '''
             Calculate the array of types in the open neighborhood 
             of the vertex.
@@ -139,7 +168,24 @@ class BaseGraphEnvironment(ABC):
             Return:
                 np.array of the count for each type
         '''
-        return None
+        neigh_type_vector = np.zeros(self.num_types)
+        neigh_vertices = self.get_immediate_neighbours(vertex, as_dict=True)
+        for n_v in neigh_vertices.values():
+            neigh_type_vector[n_v.type] += 1
+        ref_v_loc = tuple(vertex.loc_idx)
+        
+        neigh_loc = list(neigh_vertices.keys())
+        for _ in range(1, self.neigh_radius):
+            additional_neigh_loc = {}
+            for i in neigh_loc:
+                additional_neigh_vertices = self.get_immediate_neighbours(neigh_vertices[i], as_dict=True)
+                for nn_v in additional_neigh_vertices.keys():
+                    if nn_v not in neigh_vertices and nn_v != ref_v_loc:
+                        neigh_vertices[nn_v] = additional_neigh_vertices[nn_v]
+                        neigh_type_vector[neigh_vertices[nn_v].type] += 1
+                        additional_neigh_loc[nn_v] = None
+            neigh_loc = additional_neigh_loc.keys()
+        return neigh_type_vector
     
     def compute_utility(self, vertex: Vertex, utility_func: Callable = None):
         '''
@@ -156,7 +202,7 @@ class BaseGraphEnvironment(ABC):
                 the scalar utility measure
         '''
         if vertex.neigh_vector is None:
-            vertex.neigh_vector = self.get_neighborhood_vector(vertex)
+            vertex.neigh_vector = self.get_neighborhood_type_vector(vertex)
         if utility_func is None:
             return self._utility_func(vertex)
         return utility_func(vertex)

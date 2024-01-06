@@ -1,5 +1,5 @@
 ''' 
-    Utility function based on`vertex.neigh_vector` 
+    Utility function based on`vertex.neigh_type_vector` 
     (a vector with each element counting the number
     of neighbours having a certain type).
 '''
@@ -14,9 +14,9 @@ if TYPE_CHECKING:
 def binary_diversity_utility(vertex: Vertex):
     '''
         1 if one of its neighbours is a different type than itself
-        0 otherwise (if everyone is the say type than itself)
+        0 otherwise (if everyone is the same type than itself)
     '''
-    if vertex.neigh_vector[vertex.type] == np.sum(vertex.neigh_vector):
+    if vertex.neigh_type_vector[vertex.type] == np.sum(vertex.neigh_type_vector):
         return 0
     return 1
 
@@ -26,7 +26,7 @@ def count_diversity_utility(vertex: Vertex):
         Count the number of neighbours with different type than itself.
     '''
     count = 0
-    for i, c in enumerate(vertex.neigh_vector):
+    for i, c in enumerate(vertex.neigh_type_vector):
         if i == vertex.type:
             continue
         count += c
@@ -35,23 +35,27 @@ def count_diversity_utility(vertex: Vertex):
 
 def type_counting_diversity_utility(vertex: Vertex):
     '''
-        Count the number of different types in the open neighborhood.
+        Count the number of different types in the close neighborhood.
     '''
-    if binary_diversity_utility(vertex) == 0:
-        return 0
-    return len([i for i in vertex.neigh_vector if i > 0])
+    neigh_type_vector = np.copy(vertex.neigh_type_vector)
+    neigh_type_vector[vertex.type] += 1
+    return len([i for i in neigh_type_vector if i > 0])
 
 
 def schelling_segregation_utility(vertex: Vertex):
     '''
-        The fraction of its neighbours that are the same type than itself.
+        1 if the fraction of its neighbours that are 
+            the same type than itself is at least 0.5.
+        0 otherwise.
     '''
-    return vertex.neigh_vector[vertex.type]/np.sum(vertex.neigh_vector)
+    return int(vertex.neigh_type_vector[vertex.type]/np.sum(vertex.neigh_type_vector) >= 0.5)
 
 
 def anti_shelling_diversity_utility(vertex: Vertex):
     '''
-        The fraction of its neighbours that are a different type than itself.
+        0 if the fraction of its neighbours that are 
+            the same type than itself is at least 0.5.
+        1 otherwise.
     '''
     return 1 - schelling_segregation_utility(vertex)
 
