@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 INDIVIDUAL_GREATER = 0
 INDIVIDUAL_NO_WORSE = 1
-MUTUAL_GREATER = 2
+SUM_GREATER = 2
 COLLECTIVE_GREATER = 3
 
 
@@ -24,7 +24,7 @@ class BaseSwapper(BaseDynamics):
         '''
         if swap_condition == INDIVIDUAL_NO_WORSE:
             self.swap_condition = lambda u1, u2, u12, u21: (u12 >= u1) and (u21 >= u2) and (u12 + u21) > (u1 + u2) 
-        elif swap_condition == MUTUAL_GREATER:
+        elif swap_condition == SUM_GREATER:
             self.swap_condition = lambda u1, u2, u12, u21: (u12 + u21) > (u1 + u2) 
         elif swap_condition == COLLECTIVE_GREATER:
             pass
@@ -62,7 +62,8 @@ class BaseSwapper(BaseDynamics):
         loc_idx_list = [v1.loc_idx, v2.loc_idx]
         return DynamicsOutput(
             past_locations=loc_idx_list,
-            new_locations=loc_idx_list[::-1]
+            new_locations=loc_idx_list[::-1],
+            is_end=False
         )
 
 
@@ -86,7 +87,9 @@ class UtilityOrderedSwapper(BaseSwapper):
         util_vertex.sort(key=lambda x: x[1])
         for i in range(env.num_vertices-1):
             for j in range(i+1, env.num_vertices):
+                if util_vertex[i][0].type == util_vertex[j][0].type:
+                    continue
                 if self._can_swap(util_vertex[i][0], util_vertex[j][0], env,
                                    u1=util_vertex[i][1], u2=util_vertex[j][1]):
                     return self._swap(util_vertex[i][0], util_vertex[j][0])
-        return None
+        return self.end_response()

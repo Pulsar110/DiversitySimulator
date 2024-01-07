@@ -61,6 +61,7 @@ class BaseGraphEnvironment(ABC):
         self.dynamics = dynamics
         self.neigh_radius = neigh_radius
         self.verbosity = verbosity
+        self.done = False
 
         self.world = self._init_world()
 
@@ -232,10 +233,15 @@ class BaseGraphEnvironment(ABC):
             Run the simulation for one step.
 
             Return:
-                True changed.
+                True if changed.
         '''
+        if self.done:
+            return False
         response = self.dynamics.step(self)
         if response is not None:
+            if response.is_end:
+                self.done = True
+                return False
             self.move_vertices(response)
             if self.verbosity > 0:
                 print(self.world)

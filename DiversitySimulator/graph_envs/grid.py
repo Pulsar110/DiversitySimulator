@@ -80,8 +80,8 @@ class GridWorld(BaseGraphEnvironment):
             loc_idx = self.__convert_index(loc_idx)
         v_type = self.world
         for idx in loc_idx[:-1]:
-            v_type = v_type[idx]
-        v_type[loc_idx[-1]] = given_type
+            v_type = v_type[int(idx)]
+        v_type[int(loc_idx[-1])] = given_type
 
     def get_max_degree(self):
         return self.vertex_degree
@@ -223,21 +223,30 @@ class GridWorld(BaseGraphEnvironment):
         if degree < self.vertex_degree: 
             print('Warning! Only found %d degree for world size:' % degree, self.world_size)
         return __return_neigh_vertices()
+    
+    def save_snapshot(self, fig_name):
+        fig, ax = plt.subplots()
+        ax.imshow(self.world)
+        plt.savefig(fig_name+'.png')
 
     def visualize(self, num_steps):
         assert len(self.world_size) == 2
 
         fig, ax = plt.subplots()
         self.viz_metrics = self.compute_metric_summary(to_str=True)
+        self.save_snapshot('init')
         
         def step_visualize(i):
-            if i>0 and self.step():
+            print('Step', i)
+            if i>0 and i<num_steps and self.step():
                 self.viz_metrics = self.compute_metric_summary(to_str=True)
             ax.imshow(self.world)
-            ax.set_title('Step: %d, %s' % (i, self.viz_metrics))
+            ax.set_title('Step: %d, %s' % (min(i, num_steps), self.viz_metrics))
+            if i == num_steps:
+                self.save_snapshot('final')
             return ax,
 
-        ani = animation.FuncAnimation(fig, step_visualize, frames=num_steps, interval=1)
+        ani = animation.FuncAnimation(fig, step_visualize, frames=num_steps+10, interval=1)
         # plt.show()
 
         # To save the animation using Pillow as a gif

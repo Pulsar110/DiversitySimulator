@@ -3,7 +3,7 @@
 '''
 from graph_envs.grid import GridWorld
 from utilities.neighborhood_vector_metrics import type_counting_diversity_utility
-from dynamics.swap import RandomSwapper, INDIVIDUAL_NO_WORSE
+from dynamics.swap import RandomSwapper, UtilityOrderedSwapper, INDIVIDUAL_NO_WORSE
 from metrics.diversity_metrics import number_of_colorful_edges
 from metrics.metrics import social_welfare_metric
 
@@ -43,7 +43,7 @@ def GRID_4DEG_WORLD(world_size:list, verbosity:int=1):
                      wrapped_indices=[True, True],
                      utility_func=type_counting_diversity_utility,
                      metrics=METRICS,
-                     dynamics=RandomSwapper(INDIVIDUAL_NO_WORSE),
+                     dynamics=UtilityOrderedSwapper(INDIVIDUAL_NO_WORSE),
                      verbosity=verbosity)
 
 

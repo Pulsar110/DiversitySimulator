@@ -1,10 +1,10 @@
 from configs import CYLINDER_WORLD, GRID_4DEG_WORLD
 
 # world = CYLINDER_WORLD(10)
-world = GRID_4DEG_WORLD([10,10])
+world = GRID_4DEG_WORLD([20,20])
 print(world.world)
 world.compute_metric_summary(print_results=True)
-world.visualize(15)
+world.visualize(200)
 # for i in range(100):
 #     changed = world.step()
 #     if changed:

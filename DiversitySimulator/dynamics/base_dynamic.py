@@ -18,9 +18,11 @@ class DynamicsOutput:
         Args:
             past_locations: list of past locations indices
             new_locations: list of new locations indices
+            is_end: True if there is no more moves to make
     '''
     past_locations: list = None
     new_locations: list = None
+    is_end: bool = None
 
 
 class BaseDynamics(ABC):
@@ -37,3 +39,10 @@ class BaseDynamics(ABC):
                 DynamicsOutput
         '''
         return None
+    
+    def end_response(self):
+        return DynamicsOutput(
+            past_locations=None,
+            new_locations=None,
+            is_end=True
+        )
