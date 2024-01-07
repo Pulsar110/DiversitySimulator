@@ -23,7 +23,7 @@ def degree_of_intergration(graph: BaseGraphEnvironment):
     '''
     doi = np.zeros(graph.get_max_degree())
     for v in graph:
-        count = graph.compute_utility(v, count_diversity_utility)
+        count = int(graph.compute_utility(v, count_diversity_utility))
         doi[:count] += 1
     return doi
 

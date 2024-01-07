@@ -4,26 +4,40 @@ import numpy as np
 from dynamics.base_dynamic import BaseDynamics, DynamicsOutput
 from graph_envs.base_graph_env import Vertex
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 if TYPE_CHECKING:   
     from graph_envs.base_graph_env import BaseGraphEnvironment
 
 
-class RandomSwapper(BaseDynamics):
-    '''
-        Randomly select a pair of vertices and swap them if both of their utilities can 
-    '''
+INDIVIDUAL_GREATER = 0
+INDIVIDUAL_NO_WORSE = 1
+MUTUAL_GREATER = 2
+COLLECTIVE_GREATER = 3
 
-    def __init__(self, pair_size:int = 2):
+
+class BaseSwapper(BaseDynamics):
+
+    def __init__(self, swap_condition:int=0):
         '''
             Args:
-                pair_size: the number of vertices to be selected per time
-                TODO: hardcoded for now?
+                swap_condition: a function with input four utilities and decide whether to swap
         '''
-        self.pair_size = 2 # pair_size
+        if swap_condition == INDIVIDUAL_NO_WORSE:
+            self.swap_condition = lambda u1, u2, u12, u21: (u12 >= u1) and (u21 >= u2) and (u12 + u21) > (u1 + u2) 
+        elif swap_condition == MUTUAL_GREATER:
+            self.swap_condition = lambda u1, u2, u12, u21: (u12 + u21) > (u1 + u2) 
+        elif swap_condition == COLLECTIVE_GREATER:
+            pass
+            # TODO: considering neighbour utilities
+        else: # swap_condition == INDIVIDUAL_GREATER
+             self.swap_condition = lambda u1, u2, u12, u21: (u12 > u1) and (u21 > u2)
 
-
-    def __can_swap(self, v1: Vertex, v2: Vertex, env: BaseGraphEnvironment):
+    def _can_swap(self, 
+                   v1: Vertex, 
+                   v2: Vertex, 
+                   env: BaseGraphEnvironment,
+                   u1:Any=None,
+                   u2:Any=None):
         '''
             Can swap the colors at two locations 
             if both improve their utilities.
@@ -31,8 +45,10 @@ class RandomSwapper(BaseDynamics):
         v12 = Vertex(loc_idx=v2.loc_idx, type=v1.type)
         v21 = Vertex(loc_idx=v1.loc_idx, type=v2.type)
 
-        u1 = env.compute_utility(v1)
-        u2 = env.compute_utility(v2)
+        if u1 is None:
+            u1 = env.compute_utility(v1)
+        if u2 is None:
+            u2 = env.compute_utility(v2)
         u12 = env.compute_utility(v12)
         u21 = env.compute_utility(v21)
 
@@ -40,16 +56,37 @@ class RandomSwapper(BaseDynamics):
             print('Swapping', v1, 'and', v2)
             print('Old utilities:', u1, u2, '-> New utilities:', u12, u21)
 
-        if (u12 > u1) and (u21 > u2):
-            return True
-        return False
+        return self.swap_condition(u1, u2, u12, u21)
 
+    def _swap(self, v1: Vertex, v2: Vertex):
+        loc_idx_list = [v1.loc_idx, v2.loc_idx]
+        return DynamicsOutput(
+            past_locations=loc_idx_list,
+            new_locations=loc_idx_list[::-1]
+        )
+
+
+class RandomSwapper(BaseSwapper):
+    '''
+        Randomly select a pair of vertices and swap them if both of their utilities can 
+    '''
     def step(self, env: BaseGraphEnvironment):
-        samples = env.sample_vertices(self.pair_size)
-        if self.__can_swap(samples[0], samples[1], env):
-            loc_idx_list = [v.loc_idx for v in samples]
-            return DynamicsOutput(
-                past_locations=loc_idx_list,
-                new_locations=loc_idx_list[::-1]
-            )
+        samples = env.sample_vertices(2)
+        if self._can_swap(samples[0], samples[1], env):
+            return self._swap(samples[0], samples[1])
+        return None
+
+
+class UtilityOrderedSwapper(BaseSwapper):
+    '''
+        Iterate by priority based on the utility of the vertex
+    '''
+    def step(self, env: BaseGraphEnvironment):
+        util_vertex = [(v, env.compute_utility(v)) for v in env]
+        util_vertex.sort(key=lambda x: x[1])
+        for i in range(env.num_vertices-1):
+            for j in range(i+1, env.num_vertices):
+                if self._can_swap(util_vertex[i][0], util_vertex[j][0], env,
+                                   u1=util_vertex[i][1], u2=util_vertex[j][1]):
+                    return self._swap(util_vertex[i][0], util_vertex[j][0])
         return None

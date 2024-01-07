@@ -38,6 +38,7 @@ class BaseGraphEnvironment(ABC):
                  num_vertices: int, 
                  num_types: int, 
                  utility_func: Callable,
+                 metrics: list|Callable,
                  dynamics: BaseDynamics,
                  neigh_radius: int = 1,
                  verbosity: int = 0):
@@ -46,6 +47,7 @@ class BaseGraphEnvironment(ABC):
                 num_vertices: number of vertices in the world
                 num_types: number of different types of vertices
                 utility: utility metric
+                metrics: metric or list of metrics used to measure the diversity level of the world
                 dynamics: BaseDynamics object to model how the vectors move
                 neigh_radius: neighbourhood radius, used for the utility metrics (default = 1)
                 verbosity: for printing debug message (default 0)
@@ -53,6 +55,9 @@ class BaseGraphEnvironment(ABC):
         self.num_vertices = num_vertices
         self.num_types = num_types
         self._utility_func = utility_func
+        if not isinstance(metrics, list):
+            metrics = [metrics]
+        self._metrics = metrics
         self.dynamics = dynamics
         self.neigh_radius = neigh_radius
         self.verbosity = verbosity
@@ -136,7 +141,7 @@ class BaseGraphEnvironment(ABC):
         if self.__current >= self.num_vertices:
             raise StopIteration
         else:
-            v = self.get_vertice(self.__current)
+            v = self.get_vertex(self.__current)
             self.__current += 1
             return v
     ### end
@@ -201,8 +206,8 @@ class BaseGraphEnvironment(ABC):
             Return:
                 the scalar utility measure
         '''
-        if vertex.neigh_vector is None:
-            vertex.neigh_vector = self.get_neighborhood_type_vector(vertex)
+        if vertex.neigh_type_vector is None:
+            vertex.neigh_type_vector = self.get_neighborhood_type_vector(vertex)
         if utility_func is None:
             return self._utility_func(vertex)
         return utility_func(vertex)
@@ -220,7 +225,7 @@ class BaseGraphEnvironment(ABC):
         for new_loc, past_loc, to_type in zip(dynamic_output.new_locations, dynamic_output.past_locations, type_list):
             if self.verbosity == 1:
                 print('Moving vertex at', past_loc, 'to', new_loc, 'type=', to_type)
-            self.set_vertex_type(to_type, new_loc)
+            self.set_vertex_type(to_type, new_loc)   
 
     def step(self):
         '''
@@ -237,18 +242,33 @@ class BaseGraphEnvironment(ABC):
             return True
         return False
         
-    @abstractmethod
-    def compute_metric_summary(self):
+    def compute_metric_summary(self, print_results:bool=False, to_str:bool=False):
         '''
             Get a summary of all metrics for the current time step.
+
+            Args:
+                print_results: (optional) print_results the result in the terminal
+                to_str: (optional) return as a string instead of a dictionary
         '''
-        pass
+        results = {m.__name__: m(self) for m in self._metrics}
+        if print_results:
+            for k, v in results.items():
+                print(k, v)
+        if to_str:
+            results_str = ''
+            for k, v in results.items():
+                results_str += k + ': ' + str(v) + ', ' 
+            return results_str[:-2]
+        return results
 
     @abstractmethod
-    def visualize(self):
+    def visualize(self, num_steps:int, save_gif:bool=True):
         '''
-            Visualization function 
+            Visualize the simulation for num_steps.
+
+            Args:
+                num_steps: number of steps
+                save_gif: if True, save to GIF instead of displaying on the screen.
         '''
         pass
-
-    
+         

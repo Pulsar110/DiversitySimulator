@@ -1,8 +1,9 @@
 from __future__ import annotations
 import numpy as np 
-import matplotlib.pyplot as plt
 import copy
 from itertools import combinations_with_replacement
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 from graph_envs.base_graph_env import BaseGraphEnvironment, Vertex
 
@@ -71,7 +72,7 @@ class GridWorld(BaseGraphEnvironment):
             loc_idx = self.__convert_index(loc_idx)
         v_type = self.world
         for idx in loc_idx:
-            v_type = v_type[idx]
+            v_type = v_type[int(idx)]
         return v_type
 
     def set_vertex_type(self, given_type: int, loc_idx: int|list):
@@ -222,11 +223,25 @@ class GridWorld(BaseGraphEnvironment):
         if degree < self.vertex_degree: 
             print('Warning! Only found %d degree for world size:' % degree, self.world_size)
         return __return_neigh_vertices()
-            
-    def compute_metric_summary(self): # TODO
-        pass
 
-    def visualize(self): # TODO
-        pass
+    def visualize(self, num_steps):
+        assert len(self.world_size) == 2
 
+        fig, ax = plt.subplots()
+        self.viz_metrics = self.compute_metric_summary(to_str=True)
+        
+        def step_visualize(i):
+            if i>0 and self.step():
+                self.viz_metrics = self.compute_metric_summary(to_str=True)
+            ax.imshow(self.world)
+            ax.set_title('Step: %d, %s' % (i, self.viz_metrics))
+            return ax,
 
+        ani = animation.FuncAnimation(fig, step_visualize, frames=num_steps, interval=1)
+        # plt.show()
+
+        # To save the animation using Pillow as a gif
+        writer = animation.PillowWriter(fps=10,
+                                        metadata=dict(artist='Diversity Simulator'),
+                                        bitrate=1800)
+        ani.save('simulation.gif', writer=writer)
