@@ -40,9 +40,6 @@ class GridWorld(BaseGraphEnvironment):
         self.wrapped_indices = wrapped_indices
         super().__init__(np.prod(self.world_size), *args, **kwargs)
         
-    def _init_world(self):
-        return np.random.choice(self.num_types, self.world_size)
-
     def __convert_index(self, location_1D):
         '''
             Convert 1D location index to n-D location index. 
@@ -229,12 +226,12 @@ class GridWorld(BaseGraphEnvironment):
         ax.imshow(self.world)
         plt.savefig(fig_name+'.png')
 
-    def visualize(self, num_steps):
+    def visualize(self, num_steps:int, name:str=None):
         assert len(self.world_size) == 2
 
         fig, ax = plt.subplots()
         self.viz_metrics = self.compute_metric_summary(to_str=True)
-        self.save_snapshot('init')
+        self.save_snapshot('%s_init'%(name))
         
         def step_visualize(i):
             print('Step', i)
@@ -243,7 +240,7 @@ class GridWorld(BaseGraphEnvironment):
             ax.imshow(self.world)
             ax.set_title('Step: %d, %s' % (min(i, num_steps), self.viz_metrics))
             if i == num_steps:
-                self.save_snapshot('final')
+                self.save_snapshot('%s_final'%(name))
             return ax,
 
         ani = animation.FuncAnimation(fig, step_visualize, frames=num_steps+10, interval=1)
@@ -253,4 +250,4 @@ class GridWorld(BaseGraphEnvironment):
         writer = animation.PillowWriter(fps=10,
                                         metadata=dict(artist='Diversity Simulator'),
                                         bitrate=1800)
-        ani.save('simulation.gif', writer=writer)
+        ani.save('%s_simulation.gif'%(name), writer=writer)

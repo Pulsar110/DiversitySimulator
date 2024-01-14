@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass 
 import numpy as np
 
+from graph_envs.grid_initializations import random_init
+
 from typing import TYPE_CHECKING, Callable, Any
 if TYPE_CHECKING:
     from dynamics.base_dynamic import BaseDynamics, DynamicsOutput
@@ -41,6 +43,7 @@ class BaseGraphEnvironment(ABC):
                  metrics: list|Callable,
                  dynamics: BaseDynamics,
                  neigh_radius: int = 1,
+                 init_func: Callable = random_init,
                  verbosity: int = 0):
         '''
             Args:
@@ -49,12 +52,13 @@ class BaseGraphEnvironment(ABC):
                 utility: utility metric
                 metrics: metric or list of metrics used to measure the diversity level of the world
                 dynamics: BaseDynamics object to model how the vectors move
+                init_func: world initializaton function.
                 neigh_radius: neighbourhood radius, used for the utility metrics (default = 1)
                 verbosity: for printing debug message (default 0)
         '''
         self.num_vertices = num_vertices
         self.num_types = num_types
-        self._utility_func = utility_func
+        self.utility_func = utility_func
         if not isinstance(metrics, list):
             metrics = [metrics]
         self._metrics = metrics
@@ -63,17 +67,7 @@ class BaseGraphEnvironment(ABC):
         self.verbosity = verbosity
         self.done = False
 
-        self.world = self._init_world()
-
-    @abstractmethod
-    def _init_world(self):
-        '''
-            World initialization function. 
-
-            Return:
-                Object for self.world.
-        '''
-        return None
+        self.world = init_func(self)
 
     @abstractmethod
     def get_vertex(self, loc_idx: Any):
@@ -202,7 +196,7 @@ class BaseGraphEnvironment(ABC):
             Args:
                 vertex: reference vertex
                 utility_func: (optional) the utility function to use
-                              if None, use `self._utility_func`
+                              if None, use `self.utility_func`
 
             Return:
                 the scalar utility measure
@@ -210,7 +204,7 @@ class BaseGraphEnvironment(ABC):
         if vertex.neigh_type_vector is None:
             vertex.neigh_type_vector = self.get_neighborhood_type_vector(vertex)
         if utility_func is None:
-            return self._utility_func(vertex)
+            return self.utility_func(vertex)
         return utility_func(vertex)
     
     def move_vertices(self, dynamic_output: DynamicsOutput):
@@ -224,8 +218,8 @@ class BaseGraphEnvironment(ABC):
         '''
         type_list = [self.get_vertex_type(loc_idx) for loc_idx in dynamic_output.past_locations]
         for new_loc, past_loc, to_type in zip(dynamic_output.new_locations, dynamic_output.past_locations, type_list):
-            if self.verbosity == 1:
-                print('Moving vertex at', past_loc, 'to', new_loc, 'type=', to_type)
+            # if self.verbosity == 1:
+            #     print('Moving vertex at', past_loc, 'to', new_loc, 'type=', to_type)
             self.set_vertex_type(to_type, new_loc)   
 
     def step(self):
@@ -244,6 +238,7 @@ class BaseGraphEnvironment(ABC):
                 return False
             self.move_vertices(response)
             if self.verbosity > 0:
+                print('Moving vertex at', response.past_locations, 'to', response.new_locations)
                 print(self.world)
             return True
         return False

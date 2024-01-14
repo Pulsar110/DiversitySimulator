@@ -19,7 +19,7 @@ def CIRCLE_WORLD(world_size:int, verbosity:int=1):
                      wrapped_indices=[True],
                      utility_func=type_counting_diversity_utility,
                      metrics=METRICS,
-                     dynamics=RandomSwapper(INDIVIDUAL_NO_WORSE),
+                     dynamics=UtilityOrderedSwapper(INDIVIDUAL_NO_WORSE),
                      verbosity=verbosity)
 
 
@@ -31,7 +31,7 @@ def CYLINDER_WORLD(world_size:int, verbosity:int=1):
                      wrapped_indices=[False, True],
                      utility_func=type_counting_diversity_utility,
                      metrics=METRICS,
-                     dynamics=RandomSwapper(INDIVIDUAL_NO_WORSE),
+                     dynamics=UtilityOrderedSwapper(INDIVIDUAL_NO_WORSE),
                      verbosity=verbosity)
 
 
@@ -49,11 +49,11 @@ def GRID_4DEG_WORLD(world_size:list, verbosity:int=1):
 
 def GRID_8DEG_WORLD(world_size:list, verbosity:int=1):
     return GridWorld(world_size, 
-                     num_types=3,
+                     num_types=6,
                      neigh_radius=1,
                      vertex_degree=8, 
                      wrapped_indices=[True, True],
                      utility_func=type_counting_diversity_utility,
                      metrics=METRICS,
-                     dynamics=RandomSwapper(INDIVIDUAL_NO_WORSE),
+                     dynamics=UtilityOrderedSwapper(INDIVIDUAL_NO_WORSE),
                      verbosity=verbosity)

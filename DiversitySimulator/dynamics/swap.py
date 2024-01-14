@@ -49,8 +49,10 @@ class BaseSwapper(BaseDynamics):
             u1 = env.compute_utility(v1)
         if u2 is None:
             u2 = env.compute_utility(v2)
+        env.move_vertices(self._swap(v1, v2))
         u12 = env.compute_utility(v12)
         u21 = env.compute_utility(v21)
+        env.move_vertices(self._swap(v12, v21))
 
         if env.verbosity==2:
             print('Swapping', v1, 'and', v2)
