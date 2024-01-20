@@ -221,9 +221,10 @@ class GridWorld(BaseGraphEnvironment):
             print('Warning! Only found %d degree for world size:' % degree, self.world_size)
         return __return_neigh_vertices()
     
-    def save_snapshot(self, fig_name):
+    def save_snapshot(self, step_n, fig_name):
         fig, ax = plt.subplots()
         ax.imshow(self.world)
+        ax.set_title('Step: %d, %s' % (step_n, self.viz_metrics))
         plt.savefig(fig_name+'.png')
 
     def visualize(self, num_steps:int, name:str=None):
@@ -231,7 +232,7 @@ class GridWorld(BaseGraphEnvironment):
 
         fig, ax = plt.subplots()
         self.viz_metrics = self.compute_metric_summary(to_str=True)
-        self.save_snapshot('%s_init'%(name))
+        self.save_snapshot(0, '%s_init'%(name))
         
         def step_visualize(i):
             print('Step', i)
@@ -240,7 +241,7 @@ class GridWorld(BaseGraphEnvironment):
             ax.imshow(self.world)
             ax.set_title('Step: %d, %s' % (min(i, num_steps), self.viz_metrics))
             if i == num_steps:
-                self.save_snapshot('%s_final'%(name))
+                self.save_snapshot(i, '%s_final'%(name))
             return ax,
 
         ani = animation.FuncAnimation(fig, step_visualize, frames=num_steps+10, interval=1)

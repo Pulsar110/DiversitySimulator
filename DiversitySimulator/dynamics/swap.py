@@ -22,26 +22,15 @@ class BaseSwapper(BaseDynamics):
             Args:
                 swap_condition: a function with input four utilities and decide whether to swap
         '''
-        if swap_condition == INDIVIDUAL_NO_WORSE:
-            self.swap_condition = lambda u1, u2, u12, u21: (u12 >= u1) and (u21 >= u2) and (u12 + u21) > (u1 + u2) 
-        elif swap_condition == SUM_GREATER:
-            self.swap_condition = lambda u1, u2, u12, u21: (u12 + u21) > (u1 + u2) 
-        elif swap_condition == COLLECTIVE_GREATER:
-            pass
-            # TODO: considering neighbour utilities
-        else: # swap_condition == INDIVIDUAL_GREATER
-             self.swap_condition = lambda u1, u2, u12, u21: (u12 > u1) and (u21 > u2)
+        self.swap_condition = swap_condition
 
-    def _can_swap(self, 
-                   v1: Vertex, 
-                   v2: Vertex, 
-                   env: BaseGraphEnvironment,
-                   u1:Any=None,
-                   u2:Any=None):
-        '''
-            Can swap the colors at two locations 
-            if both improve their utilities.
-        '''
+    def _pairwise_swap_condition(self, 
+                                v1: Vertex, 
+                                v2: Vertex, 
+                                env: BaseGraphEnvironment,
+                                u1:Any=None,
+                                u2:Any=None):
+        
         v12 = Vertex(loc_idx=v2.loc_idx, type=v1.type)
         v21 = Vertex(loc_idx=v1.loc_idx, type=v2.type)
 
@@ -58,7 +47,59 @@ class BaseSwapper(BaseDynamics):
             print('Swapping', v1, 'and', v2)
             print('Old utilities:', u1, u2, '-> New utilities:', u12, u21)
 
-        return self.swap_condition(u1, u2, u12, u21)
+        can_swap = False
+        if self.swap_condition == INDIVIDUAL_NO_WORSE:
+            can_swap = (u12 >= u1) and (u21 >= u2) and (u12 + u21) > (u1 + u2) 
+        elif self.swap_condition == SUM_GREATER:
+            can_swap = (u12 + u21) > (u1 + u2)
+        else: # swap_condition == INDIVIDUAL_GREATER
+            can_swap = (u12 > u1) and (u21 > u2)
+        return can_swap
+
+    def _collective_wise_swap_condition(self, 
+                                        v1: Vertex, 
+                                        v2: Vertex, 
+                                        env: BaseGraphEnvironment,
+                                        u1:Any=None,
+                                        u2:Any=None):
+        
+        def _get_all_neighbour_utilities(v, u=None):
+            neigh = env.get_immediate_neighbours(v)
+            if u is None:
+                u = env.compute_utility(v)
+            return u, [env.compute_utility(n) for n in neigh]
+
+        u1, nu1 = _get_all_neighbour_utilities(v1, u1)
+        u2, nu2 = _get_all_neighbour_utilities(v2, u2)
+
+        v12 = Vertex(loc_idx=v2.loc_idx, type=v1.type)
+        v21 = Vertex(loc_idx=v1.loc_idx, type=v2.type)
+        env.move_vertices(self._swap(v1, v2))
+        u12, nu12 = _get_all_neighbour_utilities(v12)
+        u21, nu21 = _get_all_neighbour_utilities(v21)
+
+        # If the majority of the people, including myself, want me to move
+        # Then I can move.
+        score1, score2 = int(u1 < u12), int(u2 < u21)
+        for i in range(len(nu1)):
+            score1 += int(nu1[i] < nu21[i]) 
+            score2 += int(nu2[i] < nu12[i])
+        return score1 >= (len(nu1)+1)/2 and score2 >= (len(nu2)+1)/2
+
+    def _can_swap(self, 
+                   v1: Vertex, 
+                   v2: Vertex, 
+                   env: BaseGraphEnvironment,
+                   u1:Any=None,
+                   u2:Any=None):
+        '''
+            Can swap the type at two locations 
+            if the swap condition is satisfied.
+        '''
+        if self.swap_condition == COLLECTIVE_GREATER:
+            return self._collective_wise_swap_condition(v1, v2, env, u1, u2)
+        else:
+            return self._pairwise_swap_condition(v1, v2, env, u1, u2)
 
     def _swap(self, v1: Vertex, v2: Vertex):
         loc_idx_list = [v1.loc_idx, v2.loc_idx]
