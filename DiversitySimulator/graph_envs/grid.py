@@ -38,7 +38,8 @@ class GridWorld(BaseGraphEnvironment):
         else:
             assert(len(wrapped_indices) == len(world_size))
         self.wrapped_indices = wrapped_indices
-        super().__init__(np.prod(self.world_size), *args, **kwargs)
+        num_vertices = np.prod(self.world_size)
+        super().__init__(num_vertices, num_vertices*vertex_degree/2, *args, **kwargs)
         
     def __convert_index(self, location_1D):
         '''

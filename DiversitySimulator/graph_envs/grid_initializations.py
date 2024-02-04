@@ -25,3 +25,4 @@ def block_init(env: BaseGraphEnvironment):
         current_type += 1
     world[i:] = current_type - 1
     return world
+    

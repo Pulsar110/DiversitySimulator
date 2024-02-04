@@ -8,6 +8,7 @@ from graph_envs.grid_initializations import random_init
 from typing import TYPE_CHECKING, Callable, Any
 if TYPE_CHECKING:
     from dynamics.base_dynamic import BaseDynamics, DynamicsOutput
+    from utilities.base_utility import BaseUtility
 
 @dataclass
 class Vertex:
@@ -38,8 +39,9 @@ class BaseGraphEnvironment(ABC):
 
     def __init__(self, 
                  num_vertices: int, 
+                 num_edges: int,
                  num_types: int, 
-                 utility_func: Callable,
+                 utility: BaseUtility,
                  metrics: list|Callable,
                  dynamics: BaseDynamics,
                  neigh_radius: int = 1,
@@ -48,6 +50,7 @@ class BaseGraphEnvironment(ABC):
         '''
             Args:
                 num_vertices: number of vertices in the world
+                num_edges: number of edges in the world
                 num_types: number of different types of vertices
                 utility: utility metric
                 metrics: metric or list of metrics used to measure the diversity level of the world
@@ -57,8 +60,9 @@ class BaseGraphEnvironment(ABC):
                 verbosity: for printing debug message (default 0)
         '''
         self.num_vertices = num_vertices
+        self.num_edges = num_edges
         self.num_types = num_types
-        self.utility_func = utility_func
+        self.utility = utility
         if not isinstance(metrics, list):
             metrics = [metrics]
         self._metrics = metrics
@@ -187,7 +191,7 @@ class BaseGraphEnvironment(ABC):
             neigh_loc = additional_neigh_loc.keys()
         return neigh_type_vector
     
-    def compute_utility(self, vertex: Vertex, utility_func: Callable = None):
+    def compute_utility(self, vertex: Vertex, utility: BaseUtility = None):
         '''
             Compute the utility mesure of a vertex. 
             This method is used for the dynamics. 
@@ -195,17 +199,17 @@ class BaseGraphEnvironment(ABC):
 
             Args:
                 vertex: reference vertex
-                utility_func: (optional) the utility function to use
-                              if None, use `self.utility_func`
+                utility: (optional) the utility metric to use
+                         if None, use `self.utility`
 
             Return:
                 the scalar utility measure
         '''
         if vertex.neigh_type_vector is None:
             vertex.neigh_type_vector = self.get_neighborhood_type_vector(vertex)
-        if utility_func is None:
-            return self.utility_func(vertex)
-        return utility_func(vertex)
+        if utility is None:
+            return self.utility.compute(vertex)
+        return utility.compute(vertex)
     
     def move_vertices(self, dynamic_output: DynamicsOutput):
         '''
@@ -251,7 +255,11 @@ class BaseGraphEnvironment(ABC):
                 print_results: (optional) print_results the result in the terminal
                 to_str: (optional) return as a string instead of a dictionary
         '''
-        results = {m.__name__: m(self) for m in self._metrics}
+        results = {}
+        for m in self._metrics:
+            results[m.__name__] = m(self)
+            if isinstance(results[m.__name__], np.ndarray):
+                results[m.__name__] = results[m.__name__].tolist()
         if print_results:
             for k, v in results.items():
                 print(k, v)
