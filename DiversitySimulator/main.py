@@ -24,8 +24,10 @@ def schelling_segregation_init(env):
 
 
 ROOT = 'results/'
-WORLDS = [CYLINDER_WORLD, GRID_4DEG_WORLD, GRID_8DEG_WORLD]
-UTILITIES = [BinaryDiversityUtility, TypeCountingDiversityUtility, AntiSchellingSegregationUtility, EntropyDivertiyUtility]
+# WORLDS = [CYLINDER_WORLD, GRID_4DEG_WORLD, GRID_8DEG_WORLD]
+WORLDS = [GRID_4DEG_WORLD]
+# UTILITIES = [BinaryDiversityUtility, TypeCountingDiversityUtility, AntiSchellingSegregationUtility, EntropyDivertiyUtility]
+UTILITIES = [EntropyDivertiyUtility]
 NUM_RUNS = 10
 
 results = {}
@@ -38,23 +40,24 @@ for world_class in WORLDS:
             world = world_class(verbosity=0, utility=utility)
             print(world.world)
             # world.compute_metric_summary(print_results=True)
+            schelling_segregation_init(world)
             results[world_class.__name__][utility.__name__][i] = {
                 'init': world.compute_metric_summary()
             }
-            schelling_segregation_init(world)
-            # world.visualize(200, '%s/schelling_init/%s_type_counting_INDIVIDUAL_NO_WORSE_%d'%(ROOT, world_class.__name__, i))
+            # world.visualize(200, '%s/schelling_init/%s_entropy_INDIVIDUAL_NO_WORSE_%d'%(ROOT, world_class.__name__, i))
             steps = 0
             while world.step():
                 steps += 1
-                print(steps)
+                #print(steps)
             # world.compute_metric_summary(print_results=True)
             results[world_class.__name__][utility.__name__][i]['final'] = world.compute_metric_summary()
             results[world_class.__name__][utility.__name__][i]['steps'] = steps
-            print(results[world_class.__name__][utility.__name__][i])
+            print(world_class.__name__, utility.__name__, i, results[world_class.__name__][utility.__name__][i])
             # v = world.get_vertex([0,0])
             # v.neigh_type_vector = world.get_neighborhood_type_vector(v)
             # print(v)
             print('DONE!')
 
-with open('%s/random_init/results_.json') as json_file:
-    json.dump(results, json_file)
+        print(results)
+        with open('%s/schelling_init/%s_%s_type_counting_INDIVIDUAL_NO_WORSE_results_.json' % (ROOT, world_class.__name__, utility.__name__), 'w') as json_file:
+            json.dump(results[world_class.__name__][utility.__name__], json_file)
