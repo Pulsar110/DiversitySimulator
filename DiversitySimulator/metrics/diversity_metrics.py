@@ -34,6 +34,19 @@ def degree_of_intergration(graph: BaseGraphEnvironment):
     return doi/graph.num_vertices
 
 
+def percentage_of_segregated_verticies(graph: BaseGraphEnvironment, doi_1: float =-1):
+    '''
+        Percentage of vertices in the graph with no neighbour of different type.
+        This can be computed by 1 - DOI_1.
+
+        Return:
+            float 
+    '''
+    if doi_1 < 0:
+        doi_1 = degree_of_intergration(graph)[0]
+    return 1 - doi_1
+    
+
 def number_of_colorful_edges(graph: BaseGraphEnvironment):
     '''
         The percentage of colorful edges, that is, 

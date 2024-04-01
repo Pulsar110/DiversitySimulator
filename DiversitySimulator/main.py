@@ -2,8 +2,9 @@ import json
 
 from configs import CYLINDER_WORLD, GRID_4DEG_WORLD, GRID_8DEG_WORLD
 
+from graph_envs.grid_initializations import random_init, block_init
 from utilities.neighborhood_vector_metrics import SchellingSegregationUtility
-from dynamics.swap import UtilityOrderedSwapper, INDIVIDUAL_GREATER
+from dynamics.swap import UtilityOrderedSwapper, get_condition_name, INDIVIDUAL_GREATER, INDIVIDUAL_NO_WORSE, SUM_GREATER
 from utilities.neighborhood_vector_metrics import BinaryDiversityUtility, TypeCountingDiversityUtility, AntiSchellingSegregationUtility, EntropyDivertiyUtility
 
 
@@ -28,20 +29,26 @@ ROOT = 'results/'
 WORLDS = [GRID_4DEG_WORLD]
 # UTILITIES = [BinaryDiversityUtility, TypeCountingDiversityUtility, AntiSchellingSegregationUtility, EntropyDivertiyUtility]
 UTILITIES = [EntropyDivertiyUtility]
+INITIALIZATION = ['random_init', 'block_init', 'shelling_init'][0]
+SWAP_COND = [INDIVIDUAL_GREATER, INDIVIDUAL_NO_WORSE, SUM_GREATER][1]
 NUM_RUNS = 10
 
-results = {}
-
 for world_class in WORLDS:
-    results[world_class.__name__] = {}
     for utility in UTILITIES:
-        results[world_class.__name__][utility.__name__] = {}
+        results = {}
         for i in range(NUM_RUNS):
-            world = world_class(verbosity=0, utility=utility)
+            kwargs = {
+                 'utility': utility,
+                 'swap_cond': SWAP_COND
+            }
+            if INITIALIZATION == 'block_init':
+                kwargs['grid_init'] = block_init
+            world = world_class(verbosity=0, **kwargs)
             print(world.world)
             # world.compute_metric_summary(print_results=True)
-            schelling_segregation_init(world)
-            results[world_class.__name__][utility.__name__][i] = {
+            if INITIALIZATION == 'shelling_init':
+                schelling_segregation_init(world)
+            results[i] = {
                 'init': world.compute_metric_summary()
             }
             # world.visualize(200, '%s/schelling_init/%s_entropy_INDIVIDUAL_NO_WORSE_%d'%(ROOT, world_class.__name__, i))
@@ -50,14 +57,17 @@ for world_class in WORLDS:
                 steps += 1
                 #print(steps)
             # world.compute_metric_summary(print_results=True)
-            results[world_class.__name__][utility.__name__][i]['final'] = world.compute_metric_summary()
-            results[world_class.__name__][utility.__name__][i]['steps'] = steps
-            print(world_class.__name__, utility.__name__, i, results[world_class.__name__][utility.__name__][i])
+            results[i]['final'] = world.compute_metric_summary()
+            results[i]['steps'] = steps
+            # print(world_class.__name__, utility.__name__, i, results[i])
             # v = world.get_vertex([0,0])
             # v.neigh_type_vector = world.get_neighborhood_type_vector(v)
             # print(v)
             print('DONE!')
 
-        print(results)
-        with open('%s/schelling_init/%s_%s_type_counting_INDIVIDUAL_NO_WORSE_results_.json' % (ROOT, world_class.__name__, utility.__name__), 'w') as json_file:
-            json.dump(results[world_class.__name__][utility.__name__], json_file)
+        # print(results)
+        with open('%s/%s/%s/%s_%s_results_.json' % (ROOT, INITIALIZATION, 
+                                                    get_condition_name(SWAP_COND), 
+                                                    world_class.__name__, 
+                                                    utility.__name__), 'w') as json_file:
+            json.dump(results, json_file)

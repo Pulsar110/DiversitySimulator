@@ -15,7 +15,7 @@ def random_init(env: BaseGraphEnvironment):
 
 def block_init(env: BaseGraphEnvironment):
     '''
-        Assign a types in groups.
+        Assign the types in blocks.
     '''
     block_size = env.world_size[0] // env.num_types
     world = np.zeros(env.world_size)

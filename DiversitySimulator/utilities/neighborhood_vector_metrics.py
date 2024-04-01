@@ -45,7 +45,7 @@ class CountDiversityUtility(BaseUtility):
 
 class TypeCountingDiversityUtility(BaseUtility):
     '''
-        Count the number of different types in the close neighborhood.
+        Count the number of different types in the close neighborhood without counting its own type.
     '''
     def best_case(self, vertex: Vertex):
         return len(vertex.neigh_type_vector)
@@ -53,7 +53,7 @@ class TypeCountingDiversityUtility(BaseUtility):
     def compute(self, vertex: Vertex):
         neigh_type_vector = np.copy(vertex.neigh_type_vector)
         neigh_type_vector[vertex.type] += 1
-        return len([i for i in neigh_type_vector if i > 0])
+        return len([i for i in neigh_type_vector if i > 0]) - 1
 
 
 class SchellingSegregationUtility(BaseUtility):
@@ -89,8 +89,14 @@ class AntiSchellingSegregationUtility(SchellingSegregationUtility):
     def compute(self, vertex: Vertex, thresh: float = 0):
         return 1 - super().compute(vertex, thresh)
 
+class DifferenceCountingUtility:
+    pass
+
 
 class EntropyDivertiyUtility(BaseUtility):
+    '''
+        The entropy of the neighbours type distribution.
+    '''
     def best_case(self, vertex: Vertex):
         return np.log(len(vertex.neigh_type_vector))
 

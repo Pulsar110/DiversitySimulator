@@ -2,6 +2,7 @@
     Simulation configurations.
 '''
 from graph_envs.grid import GridWorld
+from graph_envs.grid_initializations import random_init
 from utilities.neighborhood_vector_metrics import TypeCountingDiversityUtility
 from dynamics.swap import RandomSwapper, UtilityOrderedSwapper, INDIVIDUAL_NO_WORSE
 from metrics.diversity_metrics import number_of_colorful_edges, degree_of_intergration, social_welfare
@@ -20,7 +21,8 @@ def CIRCLE_WORLD(world_size:int=40, verbosity:int=1, **kwargs):
                      wrapped_indices=[True],
                      utility=kwargs['utility']() if 'utility' in kwargs else TypeCountingDiversityUtility(),
                      metrics=METRICS,
-                     dynamics=UtilityOrderedSwapper(INDIVIDUAL_NO_WORSE),
+                     dynamics=UtilityOrderedSwapper(kwargs['swap_cond'] if 'swap_cond' in kwargs else INDIVIDUAL_NO_WORSE),
+                     init_func=kwargs['grid_init'] if 'grid_init' in kwargs else random_init,
                      verbosity=verbosity)
 
 
@@ -32,7 +34,8 @@ def CYLINDER_WORLD(world_size:int=40, verbosity:int=1, **kwargs):
                      wrapped_indices=[False, True],
                      utility=kwargs['utility']() if 'utility' in kwargs else TypeCountingDiversityUtility(),
                      metrics=METRICS,
-                     dynamics=UtilityOrderedSwapper(INDIVIDUAL_NO_WORSE),
+                     dynamics=UtilityOrderedSwapper(kwargs['swap_cond'] if 'swap_cond' in kwargs else INDIVIDUAL_NO_WORSE),
+                     init_func=kwargs['grid_init'] if 'grid_init' in kwargs else random_init,
                      verbosity=verbosity)
 
 
@@ -44,7 +47,8 @@ def GRID_4DEG_WORLD(world_size:list=[20,20], verbosity:int=1, **kwargs):
                      wrapped_indices=[True, True],
                      utility=kwargs['utility']() if 'utility' in kwargs else TypeCountingDiversityUtility(),
                      metrics=METRICS,
-                     dynamics=UtilityOrderedSwapper(INDIVIDUAL_NO_WORSE),
+                     dynamics=UtilityOrderedSwapper(kwargs['swap_cond'] if 'swap_cond' in kwargs else INDIVIDUAL_NO_WORSE),
+                     init_func=kwargs['grid_init'] if 'grid_init' in kwargs else random_init,
                      verbosity=verbosity)
 
 
@@ -56,5 +60,6 @@ def GRID_8DEG_WORLD(world_size:list=[20,20], verbosity:int=1, **kwargs):
                      wrapped_indices=[True, True],
                      utility=kwargs['utility']() if 'utility' in kwargs else TypeCountingDiversityUtility(),
                      metrics=METRICS,
-                     dynamics=UtilityOrderedSwapper(INDIVIDUAL_NO_WORSE),
+                     dynamics=UtilityOrderedSwapper(kwargs['swap_cond'] if 'swap_cond' in kwargs else INDIVIDUAL_NO_WORSE),
+                     init_func=kwargs['grid_init'] if 'grid_init' in kwargs else random_init,
                      verbosity=verbosity)

@@ -14,6 +14,15 @@ INDIVIDUAL_NO_WORSE = 1
 SUM_GREATER = 2
 COLLECTIVE_GREATER = 3
 
+def get_condition_name(cond):
+    if cond == INDIVIDUAL_GREATER:
+        return 'individual_greater'
+    if cond == INDIVIDUAL_NO_WORSE:
+        return 'individual_no_worse'
+    if cond == SUM_GREATER:
+        return 'sun_greater'
+    return 'collective_greater'
+
 
 class BaseSwapper(BaseDynamics):
 
