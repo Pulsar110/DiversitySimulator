@@ -47,7 +47,7 @@ class GridWorld(BaseGraphEnvironment):
         '''						
         l = len(self.world_size)
         if l == 1:
-            return location_1D
+            return [location_1D]
         location_nD = np.zeros(l)
 
         for i in range(l-1):

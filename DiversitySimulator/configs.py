@@ -16,9 +16,9 @@ METRICS = [social_welfare, degree_of_intergration, number_of_colorful_edges]
 def CIRCLE_WORLD(world_size:int=40, verbosity:int=1, **kwargs):
     return GridWorld([world_size], 
                      num_types=3,
-                     neigh_radius=4,
+                     neigh_radius=1,
                      vertex_degree=2, 
-                     wrapped_indices=[True],
+                     wrapped_indices=[False],
                      utility=kwargs['utility']() if 'utility' in kwargs else TypeCountingDiversityUtility(),
                      metrics=METRICS,
                      dynamics=UtilityOrderedSwapper(kwargs['swap_cond'] if 'swap_cond' in kwargs else INDIVIDUAL_NO_WORSE),

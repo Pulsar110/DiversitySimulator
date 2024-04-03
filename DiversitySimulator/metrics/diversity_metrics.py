@@ -7,7 +7,7 @@
 from __future__ import annotations
 import numpy as np
 
-from utilities.neighborhood_vector_metrics import CountDiversityUtility
+from utilities.neighborhood_vector_metrics import DifferenceCountDiversityUtility
 from utilities.neighborhood_vector_metrics import BinaryDiversityUtility, TypeCountingDiversityUtility, AntiSchellingSegregationUtility, EntropyDivertiyUtility
 
 from typing import TYPE_CHECKING
@@ -15,8 +15,8 @@ if TYPE_CHECKING:
     from graph_envs.base_graph_env import BaseGraphEnvironment
 
 
-COUNT_DIV_UTILITY = CountDiversityUtility()
-DIVERSITY_UTILITIES = [BinaryDiversityUtility(), TypeCountingDiversityUtility(), AntiSchellingSegregationUtility(), EntropyDivertiyUtility()]
+COUNT_DIV_UTILITY = DifferenceCountDiversityUtility()
+DIVERSITY_UTILITIES = [BinaryDiversityUtility(), TypeCountingDiversityUtility(), DifferenceCountDiversityUtility(), EntropyDivertiyUtility()]
 
 
 def degree_of_intergration(graph: BaseGraphEnvironment):

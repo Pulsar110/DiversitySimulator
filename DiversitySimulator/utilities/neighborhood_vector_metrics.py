@@ -27,7 +27,7 @@ class BinaryDiversityUtility(BaseUtility):
         return 1
 
 
-class CountDiversityUtility(BaseUtility):
+class DifferenceCountDiversityUtility(BaseUtility):
     '''
         Count the number of neighbours with different type than itself.
     '''
@@ -88,9 +88,6 @@ class AntiSchellingSegregationUtility(SchellingSegregationUtility):
     '''
     def compute(self, vertex: Vertex, thresh: float = 0):
         return 1 - super().compute(vertex, thresh)
-
-class DifferenceCountingUtility:
-    pass
 
 
 class EntropyDivertiyUtility(BaseUtility):

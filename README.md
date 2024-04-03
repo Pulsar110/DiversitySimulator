@@ -33,7 +33,7 @@ Metrics
 Utilities
 - Neighborhood vector metrics
     - BinaryDiversityUtility: 1 if one of its neighbours is a different type than itself, 0 otherwise.
-    - CountDiversityUtility: Count the number of neighbours with different type than itself.
+    - DifferenceCountDiversityUtility: Count the number of neighbours with different type than itself.
     - TypeCountingDiversityUtility: Count the number of different types in the close neighborhood without counting its own type.
     - SchellingSegregationUtility: The fraction of its neighours that are the same type than itself. 
     - AntiSchellingSegregationUtility (not used): The fraction of its neighours that are not the same type than itself.
@@ -45,7 +45,7 @@ Utilities
     - Initilialization: random_init, block_init, shelling initialization 
     - Swap: UtilityOrderedSwapper
     - Swap conditions: INDIVIDUAL_GREATER, INDIVIDUAL_NO_WORSE, SUM_GREATER
-    - Utilities: BinaryDiversityUtility, TypeCountingDiversityUtility, DifferenceCountingDiversity, EntropyDivertiyUtility
+    - Utilities: BinaryDiversityUtility, TypeCountingDiversityUtility, DifferenceCountDiversityUtility, EntropyDivertiyUtility
 
 - Metrics (diversity metrics)
     - social_welfare

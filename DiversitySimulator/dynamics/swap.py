@@ -20,7 +20,7 @@ def get_condition_name(cond):
     if cond == INDIVIDUAL_NO_WORSE:
         return 'individual_no_worse'
     if cond == SUM_GREATER:
-        return 'sun_greater'
+        return 'sum_greater'
     return 'collective_greater'
 
 

@@ -18,9 +18,9 @@ def block_init(env: BaseGraphEnvironment):
         Assign the types in blocks.
     '''
     block_size = env.world_size[0] // env.num_types
-    world = np.zeros(env.world_size)
+    world = np.zeros(env.world_size, dtype=int)
     current_type = 1
-    for i in range(block_size, env.world_size[0], block_size):
+    for i in range(block_size, env.world_size[0]-block_size, block_size):
         world[i:i+block_size] = current_type
         current_type += 1
     world[i:] = current_type - 1
