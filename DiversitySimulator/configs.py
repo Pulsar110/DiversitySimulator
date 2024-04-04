@@ -5,7 +5,7 @@ from graph_envs.grid import GridWorld
 from graph_envs.grid_initializations import random_init
 from utilities.neighborhood_vector_metrics import TypeCountingDiversityUtility
 from dynamics.swap import RandomSwapper, UtilityOrderedSwapper, INDIVIDUAL_NO_WORSE
-from metrics.diversity_metrics import number_of_colorful_edges, degree_of_intergration, social_welfare
+from metrics.diversity_metrics import number_of_colorful_edges, degree_of_intergration, social_welfare, percentage_of_segregated_verticies
 from metrics.metrics import social_welfare_metric
 
 
