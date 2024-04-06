@@ -24,10 +24,10 @@ legend_label_map = {
 
 ROOT = 'results/'
 # WORLDS = [CIRCLE_WORLD, CYLINDER_WORLD, GRID_4DEG_WORLD, GRID_8DEG_WORLD]
-WORLDS = ['CIRCLE_WORLD']
+WORLDS = ['CYLINDER_WORLD']
 UTILITIES = ['BinaryDiversityUtility', 'TypeCountingDiversityUtility', 'DifferenceCountDiversityUtility', 'EntropyDivertiyUtility']
 #UTILITIES = [EntropyDivertiyUtility]
-INITIALIZATIONS = ['random_init', 'block_init', 'shelling_init']
+INITIALIZATIONS = ['random_init', 'shelling_init'] #'block_init', 
 SWAP_CONDS = ['individual_greater', 'individual_no_worse', 'sum_greater']
 
 print('Social welfare contains, in order: Binary, Type Counting, Difference Counting, Entropy')
