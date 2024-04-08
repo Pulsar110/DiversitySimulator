@@ -28,9 +28,9 @@ def schelling_segregation_init(env):
 ROOT = 'results/'
 # WORLDS = [CIRCLE_WORLD, CYLINDER_WORLD, GRID_4DEG_WORLD, GRID_8DEG_WORLD]
 WORLDS = [GRID_8DEG_WORLD]
-UTILITIES = [BinaryDiversityUtility, TypeCountingDiversityUtility, DifferenceCountDiversityUtility]
-# UTILITIES = [EntropyDivertiyUtility]
-INITIALIZATION = ['random_init', 'block_init', 'shelling_init'][2]
+# UTILITIES = [BinaryDiversityUtility, TypeCountingDiversityUtility, DifferenceCountDiversityUtility]
+UTILITIES = [EntropyDivertiyUtility]
+INITIALIZATION = ['random_init', 'block_init', 'shelling_init'][0]
 SWAP_COND = [INDIVIDUAL_GREATER, INDIVIDUAL_NO_WORSE, SUM_GREATER][0]
 NUM_RUNS = 10
 
