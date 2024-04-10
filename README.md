@@ -54,3 +54,12 @@ Utilities
     - number_of_colorful_edges
 
 - Number of runs: 10
+
+### Results
+Result plots are in the `results/<initialization type>/<swap condition>/plots` directories. We are plotting the metric values against the different utitlities used. The points represent each of the 10 experiment runs for each utility evaluated on each metric, and the largest point represents the mean over 10 runs.
+
+The title contains:
+- `init`: the evaluation at the time right after the graph is initialized.
+- `final`: the evaluation at the time when equilibrum is attained.
+- `difference(final-init)`: the difference between the `final` and the `init`.
+- "mean steps" list the average number of steps to attain equilibrum for each utility.
