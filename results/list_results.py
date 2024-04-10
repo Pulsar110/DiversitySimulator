@@ -102,7 +102,8 @@ for world in WORLDS:
                             max_y = max(np.max(y), max_y)
                     plt.vlines(count, min_y, max_y, color='black')
                     count += 1
-                plt.legend()
+                if label == 'init':
+                    plt.legend()
                 block = count//len(results[label])
                 mean_steps = [np.mean(results['steps'][u]) for u in results[label].keys()]
                 mean_steps = ', '.join(list(map(lambda x:'%.2f'%(x), mean_steps)))
