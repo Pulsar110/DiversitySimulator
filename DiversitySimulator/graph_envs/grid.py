@@ -224,8 +224,12 @@ class GridWorld(BaseGraphEnvironment):
     
     def save_snapshot(self, step_n, fig_name):
         fig, ax = plt.subplots()
-        ax.imshow(self.world)
-        ax.set_title('Step: %d, %s' % (step_n, self.viz_metrics))
+        if len(self.world.shape) == 1:
+            grid_world = np.reshape(self.world, [1,self.world.shape[0]])
+            ax.imshow(grid_world)
+        else:
+            ax.imshow(self.world)
+        ax.set_title('Step: %d' % (step_n))
         plt.savefig(fig_name+'.png')
 
     def visualize(self, num_steps:int, name:str=None):

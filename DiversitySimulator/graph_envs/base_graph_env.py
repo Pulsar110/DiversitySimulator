@@ -46,6 +46,7 @@ class BaseGraphEnvironment(ABC):
                  dynamics: BaseDynamics,
                  neigh_radius: int = 1,
                  init_func: Callable = random_init,
+                 init_rand_seed:int = -1,
                  verbosity: int = 0):
         '''
             Args:
@@ -55,8 +56,9 @@ class BaseGraphEnvironment(ABC):
                 utility: utility metric
                 metrics: metric or list of metrics used to measure the diversity level of the world
                 dynamics: BaseDynamics object to model how the vectors move
-                init_func: world initializaton function.
                 neigh_radius: neighbourhood radius, used for the utility metrics (default = 1)
+                init_func: world initializaton function.
+                init_rand_seed: random seed for the world initialization.
                 verbosity: for printing debug message (default 0)
         '''
         self.num_vertices = num_vertices
@@ -71,7 +73,7 @@ class BaseGraphEnvironment(ABC):
         self.verbosity = verbosity
         self.done = False
 
-        self.world = init_func(self)
+        init_func(self, init_rand_seed)
 
     @abstractmethod
     def get_vertex(self, loc_idx: Any):

@@ -25,11 +25,11 @@ legend_label_map = {
 }
 
 ROOT = 'results/'
-# WORLDS = ['CIRCLE_WORLD', 'CYLINDER_WORLD', 'GRID_4DEG_WORLD', 'GRID_8DEG_WORLD']
-WORLDS = ['GRID_8DEG_WORLD']
+WORLDS = ['CIRCLE_WORLD', 'CYLINDER_WORLD', 'GRID_4DEG_WORLD', 'GRID_8DEG_WORLD']
+# WORLDS = ['GRID_8DEG_WORLD']
 UTILITIES = ['BinaryDiversityUtility', 'TypeCountingDiversityUtility', 'DifferenceCountDiversityUtility', 'EntropyDivertiyUtility']
 INITIALIZATIONS = ['random_init', 'shelling_init'] #'block_init', 
-SWAP_CONDS = ['individual_greater'] #, 'individual_no_worse', 'sum_greater']
+SWAP_CONDS = ['individual_greater', 'individual_no_worse', 'sum_greater']
 
 print('Social welfare contains, in order: Binary, Type Counting, Difference Counting, Entropy')
 print('Degree of intergration order: DIO_1, DIO_2, ...')
@@ -40,13 +40,13 @@ for world in WORLDS:
         for swap_cond in SWAP_CONDS:
             print('Initialization: %s; Swap Condition: %s' % (initialization, swap_cond))
             results = {'difference(final-init)': {}, 'final': {}, 'init':{}, 'steps': {}}
-            dir_path = '%s_%s_%s' % (world, initialization, swap_cond)
+            dir_path = '%s%s/%s' % (ROOT, initialization, swap_cond)
             for utility in UTILITIES:
                 short_label = utility.replace('DiversityUtility', '')
                 results['difference(final-init)'][short_label] = {}
                 results['final'][short_label] = {}
                 results['init'][short_label] = {}
-                with open('%s/%s_%s_results_.json' % (ROOT, dir_path, utility), 'r') as jsonfile:
+                with open('%s/%s_%s_results_.json' % (dir_path, world, utility), 'r') as jsonfile:
                     data = json.load(jsonfile)
                 results['steps'][short_label] = [d['steps'] for d in data.values()]
                 mean_steps = np.mean([d['steps'] for d in data.values()])
@@ -109,5 +109,5 @@ for world in WORLDS:
                 mean_steps = ', '.join(list(map(lambda x:'%.2f'%(x), mean_steps)))
                 plt.title('%s %s %s\n%s, mean steps: %s' % (world, initialization, swap_cond, label, mean_steps))
                 plt.xticks(range(block//2-1, count, block), results[label].keys())
-                plt.savefig('%s/plots/%s_%s.png' % (ROOT, dir_path, label))
+                plt.savefig('%s/plots/%s_%s_%s_%s.png' % (dir_path, world, initialization, swap_cond, label))
                 plt.close()

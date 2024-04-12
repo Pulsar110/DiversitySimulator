@@ -13,7 +13,7 @@ from metrics.metrics import social_welfare_metric
 METRICS = [social_welfare, degree_of_intergration, number_of_colorful_edges]
 
 
-def CIRCLE_WORLD(world_size:int=40, verbosity:int=1, **kwargs):
+def CIRCLE_WORLD(world_size:int=400, verbosity:int=1, **kwargs):
     return GridWorld([world_size], 
                      num_types=3,
                      neigh_radius=1,
@@ -23,10 +23,11 @@ def CIRCLE_WORLD(world_size:int=40, verbosity:int=1, **kwargs):
                      metrics=METRICS,
                      dynamics=UtilityOrderedSwapper(kwargs['swap_cond'] if 'swap_cond' in kwargs else INDIVIDUAL_NO_WORSE),
                      init_func=kwargs['grid_init'] if 'grid_init' in kwargs else random_init,
+                     init_rand_seed=kwargs['init_rand_seed'] if 'init_rand_seed' in kwargs else -1,
                      verbosity=verbosity)
 
 
-def CYLINDER_WORLD(world_size:int=40, verbosity:int=1, **kwargs):
+def CYLINDER_WORLD(world_size:int=200, verbosity:int=1, **kwargs):
     return GridWorld([2, world_size], 
                      num_types=3,
                      neigh_radius=1,
@@ -36,6 +37,7 @@ def CYLINDER_WORLD(world_size:int=40, verbosity:int=1, **kwargs):
                      metrics=METRICS,
                      dynamics=UtilityOrderedSwapper(kwargs['swap_cond'] if 'swap_cond' in kwargs else INDIVIDUAL_NO_WORSE),
                      init_func=kwargs['grid_init'] if 'grid_init' in kwargs else random_init,
+                     init_rand_seed=kwargs['init_rand_seed'] if 'init_rand_seed' in kwargs else -1,
                      verbosity=verbosity)
 
 
@@ -49,6 +51,7 @@ def GRID_4DEG_WORLD(world_size:list=[20,20], verbosity:int=1, **kwargs):
                      metrics=METRICS,
                      dynamics=UtilityOrderedSwapper(kwargs['swap_cond'] if 'swap_cond' in kwargs else INDIVIDUAL_NO_WORSE),
                      init_func=kwargs['grid_init'] if 'grid_init' in kwargs else random_init,
+                     init_rand_seed=kwargs['init_rand_seed'] if 'init_rand_seed' in kwargs else -1,
                      verbosity=verbosity)
 
 
@@ -62,4 +65,5 @@ def GRID_8DEG_WORLD(world_size:list=[20,20], verbosity:int=1, **kwargs):
                      metrics=METRICS,
                      dynamics=UtilityOrderedSwapper(kwargs['swap_cond'] if 'swap_cond' in kwargs else INDIVIDUAL_NO_WORSE),
                      init_func=kwargs['grid_init'] if 'grid_init' in kwargs else random_init,
+                     init_rand_seed=kwargs['init_rand_seed'] if 'init_rand_seed' in kwargs else -1,
                      verbosity=verbosity)
