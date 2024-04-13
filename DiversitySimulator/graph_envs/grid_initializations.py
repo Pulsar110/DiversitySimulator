@@ -33,11 +33,13 @@ def _load_init(env: BaseGraphEnvironment, init_type:str, rs:int):
         if os.path.exists(FILE_PATH):
             with open(FILE_PATH, 'r') as json_data:
                 GRAPH = json.load(json_data)
+        else:
+            GRAPH = {}
 
     if rs in GRAPH:
         if init_type in GRAPH[rs]:
             env.world = np.array(copy.deepcopy(GRAPH[rs][init_type]))
-        return True
+            return True
     return False
 
 
