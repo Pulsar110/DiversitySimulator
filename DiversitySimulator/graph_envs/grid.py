@@ -225,7 +225,7 @@ class GridWorld(BaseGraphEnvironment):
     def save_snapshot(self, step_n, fig_name):
         fig, ax = plt.subplots()
         if len(self.world.shape) == 1:
-            grid_world = np.reshape(self.world, [1,self.world.shape[0]])
+            grid_world = np.tile(self.world, (2,1))
             ax.imshow(grid_world)
         else:
             ax.imshow(self.world)
