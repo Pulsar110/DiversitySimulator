@@ -41,7 +41,8 @@ Utilities
 
 ### Experiments
 - Setups
-    - Worlds: CIRCLE_WORLD(40), CYLINDER_WORLD(2,40), GRID_4DEG_WORLD(20,20), GRID_8DEG_WORLD(20,20)
+    - Worlds: CIRCLE_WORLD(400), CYLINDER_WORLD(2,200), GRID_4DEG_WORLD(20,20), GRID_8DEG_WORLD(20,20)
+    - Types: 2-9
     - Initilialization: random_init, block_init, shelling initialization 
     - Swap: UtilityOrderedSwapper
     - Swap conditions: INDIVIDUAL_GREATER, INDIVIDUAL_NO_WORSE, SUM_GREATER

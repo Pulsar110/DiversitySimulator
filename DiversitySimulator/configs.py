@@ -15,7 +15,7 @@ METRICS = [social_welfare, degree_of_intergration, number_of_colorful_edges]
 
 def CIRCLE_WORLD(world_size:int=400, verbosity:int=1, **kwargs):
     return GridWorld([world_size], 
-                     num_types=3,
+                     num_types=kwargs['num_types'] if 'num_types' in kwargs else 3,
                      neigh_radius=1,
                      vertex_degree=2, 
                      wrapped_indices=[False],
@@ -29,7 +29,7 @@ def CIRCLE_WORLD(world_size:int=400, verbosity:int=1, **kwargs):
 
 def CYLINDER_WORLD(world_size:int=200, verbosity:int=1, **kwargs):
     return GridWorld([2, world_size], 
-                     num_types=3,
+                     num_types=kwargs['num_types'] if 'num_types' in kwargs else 3,
                      neigh_radius=1,
                      vertex_degree=3, 
                      wrapped_indices=[False, True],
@@ -43,7 +43,7 @@ def CYLINDER_WORLD(world_size:int=200, verbosity:int=1, **kwargs):
 
 def GRID_4DEG_WORLD(world_size:list=[20,20], verbosity:int=1, **kwargs):
     return GridWorld(world_size, 
-                     num_types=3,
+                     num_types=kwargs['num_types'] if 'num_types' in kwargs else 3,
                      neigh_radius=1,
                      vertex_degree=4, 
                      wrapped_indices=[True, True],
@@ -57,7 +57,7 @@ def GRID_4DEG_WORLD(world_size:list=[20,20], verbosity:int=1, **kwargs):
 
 def GRID_8DEG_WORLD(world_size:list=[20,20], verbosity:int=1, **kwargs):
     return GridWorld(world_size, 
-                     num_types=6,
+                     num_types=kwargs['num_types'] if 'num_types' in kwargs else 6,
                      neigh_radius=1,
                      vertex_degree=8, 
                      wrapped_indices=[True, True],

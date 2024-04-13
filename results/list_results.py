@@ -24,7 +24,7 @@ legend_label_map = {
     'number_of_colorful_edges': '# colorful edges'
 }
 
-ROOT = 'results/'
+ROOT = 'results/6_types'
 # WORLDS = ['CIRCLE_WORLD', 'CYLINDER_WORLD', 'GRID_4DEG_WORLD', 'GRID_8DEG_WORLD']
 WORLDS = ['GRID_8DEG_WORLD']
 UTILITIES = ['BinaryDiversityUtility', 'TypeCountingDiversityUtility', 'DifferenceCountDiversityUtility', 'EntropyDivertiyUtility']

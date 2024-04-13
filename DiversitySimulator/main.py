@@ -8,20 +8,18 @@ from dynamics.swap import UtilityOrderedSwapper, get_condition_name, INDIVIDUAL_
 from utilities.neighborhood_vector_metrics import BinaryDiversityUtility, TypeCountingDiversityUtility, DifferenceCountDiversityUtility, AntiSchellingSegregationUtility, EntropyDivertiyUtility
 
 
-
-
-ROOT = 'results/'
-Path('%s/plots' % (ROOT)).mkdir(parents=True, exist_ok=True)
-Path('%s/step_plots' % (ROOT)).mkdir(parents=True, exist_ok=True)
-
 WORLDS = [CIRCLE_WORLD, CYLINDER_WORLD, GRID_4DEG_WORLD, GRID_8DEG_WORLD]
 # WORLDS = [GRID_4DEG_WORLD]
 UTILITIES = [BinaryDiversityUtility, TypeCountingDiversityUtility, DifferenceCountDiversityUtility, EntropyDivertiyUtility]
 # UTILITIES = [EntropyDivertiyUtility]
 INITIALIZATIONS = ['random_init', 'shelling_init'] #'block_init',
 SWAP_CONDS = [INDIVIDUAL_GREATER] #, INDIVIDUAL_NO_WORSE, SUM_GREATER]
-NUM_RUNS = 4
+NUM_RUNS = 100
+NUM_TYPE = 2
 
+ROOT = 'results/%d_types' % (NUM_TYPE)
+Path('%s/plots' % (ROOT)).mkdir(parents=True, exist_ok=True)
+Path('%s/step_plots' % (ROOT)).mkdir(parents=True, exist_ok=True)
 
 def get_combination():
     for initialization in INITIALIZATIONS:
@@ -46,7 +44,7 @@ for world_class in WORLDS:
                 kwargs['grid_init'] = block_init
             if initialization == 'shelling_init':
                 kwargs['grid_init'] = schelling_segregation_init
-            world = world_class(init_rand_seed=i, verbosity=0, **kwargs)
+            world = world_class(num_types=NUM_TYPE, init_rand_seed=i, verbosity=0, **kwargs)
             print(world.world)
             # world.compute_metric_summary(print_results=True)
             # if initialization == 'shelling_init':

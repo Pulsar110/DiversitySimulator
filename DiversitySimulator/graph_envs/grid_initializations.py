@@ -1,5 +1,6 @@
 from __future__ import annotations
 import os.path 
+from pathlib import Path
 import json
 import copy
 import numpy as np
@@ -11,6 +12,7 @@ if TYPE_CHECKING:
     from graph_envs.base_graph_env import BaseGraphEnvironment
 
 ROOT = 'DiversitySimulator/graph_envs/graph_inits'
+Path(ROOT).mkdir(parents=True, exist_ok=True)
 GRAPH = {}
 FILE_PATH = ''
 
