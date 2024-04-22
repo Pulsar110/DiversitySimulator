@@ -98,6 +98,20 @@ with open('%s/20240421-stats/%s.csv' % (ROOT, filename), 'w') as csvfile:
             spamwriter.writerow([world, num_type, initialization] + [utility, steps] + metrics + is_max)
 
 
+setups = list(iter_graphs())
+with open('%s/20240421-stats/ordered-%s.txt' % (ROOT, filename), 'w') as statfile:
+    for j, utility in enumerate(UTILITIES):
+        for i, metric in enumerate(focused_metrics): 
+            vals = [results[setup + (utility,)]['val'][i] for setup in setups]
+            # arg_max = np.argmax(vals)
+            # max_setup = '%s, %d types, %s' % setups[arg_max]
+            statfile.write('Utility: %s\nMetric: %s\n'%(metric, utility))
+            # statfile.write('Max at: %s\n' % (max_setup))
+            arg_sorted = np.flip(np.argsort(vals))
+            for k in arg_sorted:
+                statfile.write('%s, %d types, %s, ' % setups[k])
+                statfile.write('value: %s\n' % vals[k])
+            statfile.write('\n')
 
 
 
