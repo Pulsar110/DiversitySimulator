@@ -20,7 +20,7 @@ legend_label_map = {
 }
 
 ROOT = 'results'
-TYPES = [3,6,7]
+TYPES = [2,3,5,6,7]
 WORLDS = ['CIRCLE_WORLD', 'CYLINDER_WORLD', 'GRID_4DEG_WORLD', 'GRID_8DEG_WORLD']
 # WORLDS = ['GRID_8DEG_WORLD']
 UTILITIES = ['BinaryDiversityUtility', 'TypeCountingDiversityUtility', 'DifferenceCountDiversityUtility', 'EntropyDivertiyUtility']
@@ -28,7 +28,8 @@ INITIALIZATIONS = ['random_init', 'shelling_init'] #'block_init',
 SWAP_CONDS = ['individual_greater'] #, 'individual_no_worse', 'sum_greater']
 
 focused_metrics = ['social_welfare_3', 'number_of_colorful_edges']
-focused_metrics_is_max = list(map(lambda x: 'Is max (%s)' % x, focused_metrics))
+focused_metrics_labels = list(map(lambda x: legend_label_map[x], focused_metrics)) +\
+                         list(map(lambda x: 'Is max (%s)' % legend_label_map[x], focused_metrics))
 
 
 def iter_graphs():
@@ -88,7 +89,7 @@ with open('%s/20240421-stats/%s.csv' % (ROOT, filename), 'w') as csvfile:
                          'INITIALIZATION',
                          'UTILITY',
                          # 'SWAP CONDITION',
-                         'STEPS']+focused_metrics+focused_metrics_is_max)
+                         'STEPS']+focused_metrics_labels)
     for world, num_type, initialization in iter_graphs():  
         for utility in UTILITIES:
             metrics = results[(world, num_type, initialization, utility)]['val']
