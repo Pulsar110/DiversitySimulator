@@ -7,7 +7,7 @@ legend_label_map = {
     'social_welfare_0': 'soc. wel. (Binary)',
     'social_welfare_1': 'soc. wel. (TypeCount)',
     'social_welfare_2': 'soc. wel. (DiffCount)',
-    'social_welfare_3': 'soc. wel. (Entropy)',
+    'social_welfare_3': 'Entropy',
     'degree_of_intergration_0': 'DIO_1',
     'degree_of_intergration_1': 'DIO_2',
     'degree_of_intergration_2': 'DIO_3',
@@ -17,7 +17,7 @@ legend_label_map = {
     'degree_of_intergration_6': 'DIO_7',
     'degree_of_intergration_7': 'DIO_8',
     'percentage_of_segregated_verticies': '% of seg. vertices',
-    'number_of_colorful_edges': '# colorful edges'
+    'number_of_colorful_edges': 'CE'
 }
 
 ROOT = 'results'
@@ -68,6 +68,7 @@ for metric, world, initialization in iter_graphs():
     for utility, line_data in iter_line(metric, world, initialization):
         y = [line_data[x] for x in TYPES]
         plt.plot(TYPES, y, label=utility)
+    world = world.replace('_WORLD', '')
     plt.xlabel('Number of types')
     plt.ylabel('Metric: %s' % legend_label_map[metric])
     plt.title('%s, %s, %s' % (legend_label_map[metric], world, initialization))
