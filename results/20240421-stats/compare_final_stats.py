@@ -20,10 +20,12 @@ legend_label_map = {
 }
 
 ROOT = 'results'
-TYPES = [2,3,5,6,7]
+TYPES = [2,3,4,5,6,7,8]
 WORLDS = ['CIRCLE_WORLD', 'CYLINDER_WORLD', 'GRID_4DEG_WORLD', 'GRID_8DEG_WORLD']
 # WORLDS = ['GRID_8DEG_WORLD']
-UTILITIES = ['BinaryDiversityUtility', 'TypeCountingDiversityUtility', 'DifferenceCountDiversityUtility', 'EntropyDivertiyUtility']
+UTILITIES = ['BinaryDiversityUtility', 'TypeCountingDiversityUtility', 
+             'DifferenceCountDiversityUtility', 'EntropyDivertiyUtility', 
+             'AvgDiffTypeCountingDiversityUtility']
 INITIALIZATIONS = ['random_init', 'shelling_init'] #'block_init', 
 SWAP_CONDS = ['individual_greater'] #, 'individual_no_worse', 'sum_greater']
 
