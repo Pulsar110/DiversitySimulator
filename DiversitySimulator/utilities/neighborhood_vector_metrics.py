@@ -56,6 +56,20 @@ class TypeCountingDiversityUtility(BaseUtility):
         return len([i for i in neigh_type_vector if i > 0]) - 1
 
 
+class AvgDiffTypeCountingDiversityUtility(BaseUtility):
+    def __init__(self):
+        self._diff_u = DifferenceCountDiversityUtility()
+        self._type_u = TypeCountingDiversityUtility()
+
+    def best_case(self, vertex: Vertex):
+        return np.mean([self._diff_u.best_case(vertex), 
+                        self._type_u.best_case(vertex)])
+
+    def compute(self, vertex: Vertex):
+        return np.mean([self._diff_u.compute(vertex), 
+                        self._type_u.compute(vertex)])
+
+
 class SchellingSegregationUtility(BaseUtility):
     '''
         The fraction of its neighours that are the same type 
