@@ -5,17 +5,17 @@ from configs import CIRCLE_WORLD, CYLINDER_WORLD, GRID_4DEG_WORLD, GRID_8DEG_WOR
 
 from graph_envs.grid_initializations import random_init, block_init, schelling_segregation_init
 from dynamics.swap import UtilityOrderedSwapper, get_condition_name, INDIVIDUAL_GREATER, INDIVIDUAL_NO_WORSE, SUM_GREATER
-from utilities.neighborhood_vector_metrics import BinaryDiversityUtility, TypeCountingDiversityUtility, DifferenceCountDiversityUtility, AntiSchellingSegregationUtility, EntropyDivertiyUtility
+from utilities.neighborhood_vector_metrics import BinaryDiversityUtility, TypeCountingDiversityUtility, DifferenceCountDiversityUtility, AntiSchellingSegregationUtility, EntropyDivertiyUtility, AvgDiffTypeCountingDiversityUtility
 
 
 WORLDS = [CIRCLE_WORLD, CYLINDER_WORLD, GRID_4DEG_WORLD, GRID_8DEG_WORLD]
-# WORLDS = [GRID_4DEG_WORLD]
-UTILITIES = [BinaryDiversityUtility, TypeCountingDiversityUtility, DifferenceCountDiversityUtility, EntropyDivertiyUtility]
-# UTILITIES = [EntropyDivertiyUtility]
+# WORLDS = [CIRCLE_WORLD, CYLINDER_WORLD, GRID_4DEG_WORLD]
+# UTILITIES = [BinaryDiversityUtility, TypeCountingDiversityUtility, DifferenceCountDiversityUtility, EntropyDivertiyUtility]
+UTILITIES = [AvgDiffTypeCountingDiversityUtility]
 INITIALIZATIONS = ['random_init', 'shelling_init'] #'block_init',
 SWAP_CONDS = [INDIVIDUAL_GREATER] #, INDIVIDUAL_NO_WORSE, SUM_GREATER]
 NUM_RUNS = 100
-NUM_TYPE = 2
+NUM_TYPE = 9
 
 ROOT = 'results/%d_types' % (NUM_TYPE)
 Path('%s/plots' % (ROOT)).mkdir(parents=True, exist_ok=True)
