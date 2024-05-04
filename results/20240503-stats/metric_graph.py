@@ -109,4 +109,3 @@ if True: # plot PoA for each graph
         plt.legend(title='Graph degree')
         plt.savefig('%s/20240503-stats/PoA_%s_%s_%s.png' % (ROOT, legend_label_map[metric], utility, initialization))
         plt.close()
-
