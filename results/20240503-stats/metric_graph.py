@@ -25,8 +25,8 @@ TYPES = [2,3,4,5,6,7,8]
 WORLDS = ['CIRCLE_WORLD', 'CYLINDER_WORLD', 'GRID_4DEG_WORLD', 'GRID_8DEG_WORLD']
 # WORLDS = ['GRID_8DEG_WORLD']
 UTILITIES = ['BinaryDiversityUtility', 'TypeCountingDiversityUtility', 
-             'DifferenceCountDiversityUtility', 'EntropyDivertiyUtility']#, 
-            # 'AvgDiffTypeCountingDiversityUtility']
+             'DifferenceCountDiversityUtility', 'EntropyDivertiyUtility', 
+             'AvgDiffTypeCountingDiversityUtility']
 INITIALIZATIONS = ['random_init', 'schelling_init'] #'block_init', 
 SWAP_CONDS = ['individual_greater'] #, 'individual_no_worse', 'sum_greater']
 
@@ -56,7 +56,7 @@ def read_file(metric, world, initialization, utility):
         line_data[num_type] = mean_metrics
     return line_data
 
-if False: # plot all utilities in each graph 
+if True: # plot all utilities in each graph 
     def iter_graphs():
         for metric in focused_metrics:
             for world in WORLDS:
@@ -83,7 +83,7 @@ if False: # plot all utilities in each graph
         plt.savefig('%s/20240503-stats/%s_%s_%s.png' % (ROOT, world, initialization, legend_label_map[metric]))
         plt.close()
 
-if True: # plot PoA for each graph 
+if False: # plot PoA for each graph 
     def iter_graphs():
         for metric in focused_metrics:
             for utility in UTILITIES:
@@ -109,3 +109,4 @@ if True: # plot PoA for each graph
         plt.legend(title='Graph degree')
         plt.savefig('%s/20240503-stats/PoA_%s_%s_%s.png' % (ROOT, legend_label_map[metric], utility, initialization))
         plt.close()
+
