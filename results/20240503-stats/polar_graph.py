@@ -6,10 +6,10 @@ from pathlib import Path
 ROOT = 'results'
 TYPES = [2,3,4,5,6,7,8]
 WORLDS = ['CIRCLE_WORLD', 'CYLINDER_WORLD']
-UTILITIES = ['BinaryDiversityUtility', 'TypeCountingDiversityUtility', 
-             'DifferenceCountDiversityUtility', 'EntropyDivertiyUtility', 
+UTILITIES = [#'BinaryDiversityUtility', 'TypeCountingDiversityUtility', 
+             #'DifferenceCountDiversityUtility', 'EntropyDivertiyUtility', 
              'AvgDiffTypeCountingDiversityUtility']
-INITIALIZATIONS = ['random_init', 'schelling_init'] #'block_init', 
+INITIALIZATIONS = [ 'random_init']#'schelling_init'] #'block_init',
 SWAP_CONDS = ['individual_greater'] #, 'individual_no_worse', 'sum_greater']
 
 COLORS = ['tab:blue','tab:orange','tab:green','tab:red','tab:purple',
