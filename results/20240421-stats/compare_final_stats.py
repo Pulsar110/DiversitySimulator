@@ -26,7 +26,7 @@ WORLDS = ['CIRCLE_WORLD', 'CYLINDER_WORLD', 'GRID_4DEG_WORLD', 'GRID_8DEG_WORLD'
 UTILITIES = ['BinaryDiversityUtility', 'TypeCountingDiversityUtility', 
              'DifferenceCountDiversityUtility', 'EntropyDivertiyUtility', 
              'AvgDiffTypeCountingDiversityUtility']
-INITIALIZATIONS = ['random_init', 'shelling_init'] #'block_init', 
+INITIALIZATIONS = ['random_init', 'schelling_init'] #'block_init', 
 SWAP_CONDS = ['individual_greater'] #, 'individual_no_worse', 'sum_greater']
 
 focused_metrics = ['social_welfare_3', 'number_of_colorful_edges']
