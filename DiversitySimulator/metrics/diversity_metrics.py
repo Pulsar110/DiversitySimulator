@@ -12,14 +12,16 @@ from utilities.neighborhood_vector_metrics import BinaryDiversityUtility, TypeCo
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
+    from utilities.base_utility import BaseUtility
     from graph_envs.base_graph_env import BaseGraphEnvironment
 
 
-COUNT_DIV_UTILITY = DifferenceCountDiversityUtility()
+COUNT_DIFF_UTILITY = DifferenceCountDiversityUtility()
+COUNT_TYPE_UTILITY = TypeCountingDiversityUtility()
 DIVERSITY_UTILITIES = [BinaryDiversityUtility(), TypeCountingDiversityUtility(), DifferenceCountDiversityUtility(), EntropyDivertiyUtility()]
 
 
-def degree_of_intergration(graph: BaseGraphEnvironment):
+def diff_degree_of_intergration(graph: BaseGraphEnvironment):
     '''
         DOI_k, the percentage of vertices with at least k neighbouring 
         vertices of a different type to itself.
@@ -29,7 +31,22 @@ def degree_of_intergration(graph: BaseGraphEnvironment):
     '''
     doi = np.zeros(graph.get_max_degree())
     for v in graph:
-        count = int(graph.compute_utility(v, COUNT_DIV_UTILITY))
+        count = int(graph.compute_utility(v, COUNT_DIFF_UTILITY))
+        doi[:count] += 1
+    return doi/graph.num_vertices
+
+
+def type_degree_of_intergration(graph: BaseGraphEnvironment):
+    '''
+        DOI_k, the percentage of vertices with at least k different neighbouring 
+        types that are different to itself.
+
+        Return:
+            vector of DOI_k from k = 1 to number of type - 1
+    '''
+    doi = np.zeros(min(graph.num_types-1, graph.get_max_degree()))
+    for v in graph:
+        count = int(graph.compute_utility(v, COUNT_TYPE_UTILITY))
         doi[:count] += 1
     return doi/graph.num_vertices
 
@@ -37,13 +54,13 @@ def degree_of_intergration(graph: BaseGraphEnvironment):
 def percentage_of_segregated_verticies(graph: BaseGraphEnvironment, doi_1: float =-1):
     '''
         Percentage of vertices in the graph with no neighbour of different type.
-        This can be computed by 1 - DOI_1.
+        This can be computed by 1 - diff_DOI_1.
 
         Return:
             float 
     '''
     if doi_1 < 0:
-        doi_1 = degree_of_intergration(graph)[0]
+        doi_1 = diff_degree_of_intergration(graph)[0]
     return 1 - doi_1
     
 
@@ -53,9 +70,9 @@ def number_of_colorful_edges(graph: BaseGraphEnvironment):
         connections between vertices of different type.
 
         The number of coloful edges is equivalent to half of the sum of 
-        DOI_k (number instead of percentage) over all k.
+        diff_DOI_k (number instead of percentage) over all k.
     '''
-    return np.sum(degree_of_intergration(graph))*graph.num_vertices/graph.num_edges/2
+    return np.sum(diff_degree_of_intergration(graph))*graph.num_vertices/graph.num_edges/2
 
 
 def social_welfare(graph: BaseGraphEnvironment):
