@@ -23,13 +23,13 @@ legend_label_map = {
 
 ROOT = 'results'
 TYPES = [2,3,4,5,6,7,8]
-WORLDS = ['CIRCLE_WORLD', 'CYLINDER_WORLD', 'GRID_4DEG_WORLD', 'GRID_8DEG_WORLD']
+WORLDS = ['CIRCLE_WORLD', 'CYLINDER_WORLD', 'GRID_4DEG_WORLD']#, 'GRID_8DEG_WORLD']
 # WORLDS = ['GRID_8DEG_WORLD']
 
 UTILITIY_LABELS = {
     'BinaryDiversityUtility': 'Binary', 
-    'TypeCountingDiversityUtility': 'VarietySeaking', 
-    'DifferenceCountDiversityUtility': 'DifferenceSeeking', 
+    'TypeCountingDiversityUtility': 'Variety-seeking', 
+    'DifferenceCountDiversityUtility': 'Difference-seeking', 
     'EntropyDivertiyUtility': 'Entropy', 
     'AvgDiffTypeCountingDiversityUtility': 'AvgDiffVarSeeking'
 }
@@ -44,8 +44,8 @@ focused_metrics_labels = list(map(lambda x: legend_label_map[x], focused_metrics
 
 if False: # plot all utilities in each graph 
     UTILITIES = ['BinaryDiversityUtility', 'TypeCountingDiversityUtility', 
-                 'DifferenceCountDiversityUtility', 'EntropyDivertiyUtility', 
-                 'AvgDiffTypeCountingDiversityUtility']
+                 'DifferenceCountDiversityUtility']#, 'EntropyDivertiyUtility', 
+                 #'AvgDiffTypeCountingDiversityUtility']
 
     def read_file(metric, world, initialization, utility, state='final'):
         line_data = {}
@@ -88,10 +88,11 @@ if False: # plot all utilities in each graph
         y_min=1
         for i, initialization in enumerate(INITIALIZATIONS):
             for utility, line_data in iter_line(metric, world, initialization):
+                mod_initialization = initialization.replace('_',' ').replace('sche', 'Sche').replace('rand', 'Rand')
                 y = [line_data[x] for x in TYPES]
                 y_min = min(np.min(y), y_min)
                 if utility == 'init':
-                    utility = initialization.replace('_',' ').replace('sche', 'Sche')
+                    utility = mod_initialization
                     if i == 1:
                         ax[1].plot(TYPES, y, '--', color='black', label=utility)
                         ax[0].plot(TYPES, y, '--', color='black', label=utility)
@@ -101,7 +102,7 @@ if False: # plot all utilities in each graph
                     ax[1-i].plot(TYPES, y, label=utility)
             ax[1-i].set_xlabel('Number of types')
             ax[1-i].set_ylabel('Metric: %s' % legend_label_map[metric])
-            ax[1-i].set_title(initialization.replace('sche', 'Sche'))
+            ax[1-i].set_title(mod_initialization)
         for i in range(2):
             ax[i].set_ylim((y_min, 1))
         box_0 = ax[0].get_position()
@@ -143,7 +144,7 @@ if True: # plot PoA for each graph
             ce = np.array([d['final']['number_of_colorful_edges'] for d in data.values()])
             poa = np.array([d['final']['social_welfare'][UTILITY_SW_MAP[utility]] for d in data.values()])
             line_data[num_type] = {'PoA(CE)': np.mean(ce, axis=0),
-                                   'PoA(utility)': np.mean(poa, axis=0)}
+                                   'PoA(SW)': np.mean(poa, axis=0)}
 
         return line_data
 
@@ -154,15 +155,16 @@ if True: # plot PoA for each graph
             yield world, short_utility, line_data
 
     for utility, initialization in iter_graphs():
+        mod_initialization = initialization.replace('_',' ').replace('sche', 'Sche').replace('rand', 'Rand')
         fig, ax = plt.subplots(1,2)
         y_max = 1
         for world, utility, line_data in iter_line(utility, initialization):
-            for i, sub_title in enumerate(['PoA(CE)', 'PoA(utility)']):
+            for i, sub_title in enumerate(['PoA(CE)', 'PoA(SW)']):
                 y = [1.0/line_data[x][sub_title] for x in TYPES]
                 world = world.replace('_WORLD', '')
                 ax[i].plot(TYPES, y, label=world)
                 y_max = max(np.max(y), y_max)
-        for i, sub_title in enumerate(['PoA(CE)', 'PoA(utility)']):
+        for i, sub_title in enumerate(['PoA(CE)', 'PoA(SW)']):
             ax[i].set_xlabel('Number of types')
             ax[i].set_ylabel(sub_title)
         # for i in range(2):
@@ -172,8 +174,8 @@ if True: # plot PoA for each graph
         # box_1 = ax[1].get_position()
         # ax[1].set_position([box_1.x0-box_0.width * 0.1, box_1.y0, box_1.width * 0.9, box_1.height])
         # ax[1].legend(title='Graph degree', bbox_to_anchor=(1.0, 0.5))
-            ax[i].legend(title='Graph degree')
-        plt.suptitle('%s, %s' % (utility, initialization.replace('sche', 'Sche')))
+            ax[i].legend(title='Graph')
+        plt.suptitle('%s, %s' % (utility, mod_initialization))
         plt.savefig('%s/20240503-stats/PoA_%s_%s.png' % (ROOT, utility, initialization))
         plt.close()
 
