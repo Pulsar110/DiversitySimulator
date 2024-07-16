@@ -10,12 +10,12 @@ from utilities.neighborhood_vector_metrics import BinaryDiversityUtility, TypeCo
 
 WORLDS = [CIRCLE_WORLD, CYLINDER_WORLD, GRID_4DEG_WORLD, GRID_8DEG_WORLD]
 # WORLDS = [GRID_8DEG_WORLD]
-# UTILITIES = [BinaryDiversityUtility, TypeCountingDiversityUtility, DifferenceCountDiversityUtility, EntropyDivertiyUtility]
-UTILITIES = [AvgDiffTypeCountingDiversityUtility]
+UTILITIES = [BinaryDiversityUtility, TypeCountingDiversityUtility, DifferenceCountDiversityUtility, EntropyDivertiyUtility, AvgDiffTypeCountingDiversityUtility]
 INITIALIZATIONS = ['random_init', 'schelling_init'] #'block_init',
 SWAP_CONDS = [INDIVIDUAL_GREATER] #, INDIVIDUAL_NO_WORSE, SUM_GREATER]
 NUM_RUNS = 100
 NUM_TYPES = [2,3,4,5,6,7,8]
+verbosity = 1
 
 for NUM_TYPE in NUM_TYPES:
     ROOT = 'results/%d_types' % (NUM_TYPE)
@@ -45,8 +45,8 @@ for NUM_TYPE in NUM_TYPES:
                     kwargs['grid_init'] = block_init
                 if initialization == 'schelling_init':
                     kwargs['grid_init'] = schelling_segregation_init
-                world = world_class(num_types=NUM_TYPE, init_rand_seed=i, verbosity=0, **kwargs)
-                print(world.world)
+                world = world_class(num_types=NUM_TYPE, init_rand_seed=i, verbosity=verbosity, **kwargs)
+                print(world.toArray())
                 # world.compute_metric_summary(print_results=True)
                 # if initialization == 'schelling_init':
                 #     schelling_segregation_init(world)
@@ -55,13 +55,13 @@ for NUM_TYPE in NUM_TYPES:
                                         world_class.__name__, initialization, i))
                 results[i] = {
                     'init': world.compute_metric_summary(),
-                    'init_world': world.world.tolist(),
+                    'init_world': world.toArray().tolist(),
                     'step_world': {}
                 }
                 # world.visualize(200, '%s/schelling_init/%s_entropy_INDIVIDUAL_NO_WORSE_%d'%(ROOT, world_class.__name__, i))
                 steps = 0
                 while world.step():
-                    results[i]['step_world'][steps] = world.world.tolist()
+                    results[i]['step_world'][steps] = world.toArray().tolist()
                     steps += 1
                     #print(steps)
                 if i < 3:
@@ -69,7 +69,7 @@ for NUM_TYPE in NUM_TYPES:
                 # world.compute_metric_summary(print_results=True)
                 results[i]['final'] = world.compute_metric_summary()
                 results[i]['steps'] = steps
-                results[i]['final_world'] = world.world.tolist()
+                results[i]['final_world'] = world.toArray().tolist()
                 # print(world_class.__name__, utility.__name__, i, results[i])
                 # v = world.get_vertex([0,0])
                 # v.neigh_type_vector = world.get_neighborhood_type_vector(v)

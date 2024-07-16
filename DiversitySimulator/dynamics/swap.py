@@ -39,18 +39,16 @@ class BaseSwapper(BaseDynamics):
                                 env: BaseGraphEnvironment,
                                 u1:Any=None,
                                 u2:Any=None):
-        
-        v12 = Vertex(loc_idx=v2.loc_idx, type=v1.type)
-        v21 = Vertex(loc_idx=v1.loc_idx, type=v2.type)
 
         if u1 is None:
-            u1 = env.compute_utility(v1)
+            u1 = v1.utility
         if u2 is None:
-            u2 = env.compute_utility(v2)
+            u2 = v2.utility
         env.move_vertices(self._swap(v1, v2))
-        u12 = env.compute_utility(v12)
-        u21 = env.compute_utility(v21)
-        env.move_vertices(self._swap(v12, v21))
+        u12 = v1.utility
+        u21 = v2.utility
+        # swap back
+        env.move_vertices(self._swap(v1, v2))
 
         if env.verbosity==2:
             print('Swapping', v1, 'and', v2)
@@ -75,17 +73,16 @@ class BaseSwapper(BaseDynamics):
         def _get_all_neighbour_utilities(v, u=None):
             neigh = env.get_immediate_neighbours(v)
             if u is None:
-                u = env.compute_utility(v)
-            return u, [env.compute_utility(n) for n in neigh]
+                u = v.utility 
+            return u, [n.utility for n in neigh]
 
         u1, nu1 = _get_all_neighbour_utilities(v1, u1)
         u2, nu2 = _get_all_neighbour_utilities(v2, u2)
-
-        v12 = Vertex(loc_idx=v2.loc_idx, type=v1.type)
-        v21 = Vertex(loc_idx=v1.loc_idx, type=v2.type)
         env.move_vertices(self._swap(v1, v2))
-        u12, nu12 = _get_all_neighbour_utilities(v12)
-        u21, nu21 = _get_all_neighbour_utilities(v21)
+        u12, nu12 = _get_all_neighbour_utilities(v1)
+        u21, nu21 = _get_all_neighbour_utilities(v2)
+        # swap back
+        env.move_vertices(self._swap(v1, v2))
 
         # If the majority of the people, including myself, want me to move
         # Then I can move.
@@ -135,13 +132,13 @@ class UtilityOrderedSwapper(BaseSwapper):
         Iterate by priority based on the utility of the vertex
     '''
     def step(self, env: BaseGraphEnvironment):
-        util_vertex = [(v, env.compute_utility(v)) for v in env]
+        util_vertex = [(v, v.utility) for v in env]
         util_vertex.sort(key=lambda x: x[1])
         for i in range(env.num_vertices-1):
             for j in range(i+1, env.num_vertices):
                 if util_vertex[i][0].type == util_vertex[j][0].type:
                     continue
                 if self._can_swap(util_vertex[i][0], util_vertex[j][0], env,
-                                   u1=util_vertex[i][1], u2=util_vertex[j][1]):
+                                  u1=util_vertex[i][1], u2=util_vertex[j][1]):
                     return self._swap(util_vertex[i][0], util_vertex[j][0])
         return self.end_response()

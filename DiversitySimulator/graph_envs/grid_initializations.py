@@ -40,19 +40,19 @@ def _load_init(env: BaseGraphEnvironment, init_type:str, rs:int):
 
     if rs in GRAPH:
         if init_type in GRAPH[rs]:
-            env.world = np.array(copy.deepcopy(GRAPH[rs][init_type]))
+            env.world = copy.deepcopy(GRAPH[rs][init_type])
             return True
     return False
 
 
 def _save_init(env: BaseGraphEnvironment, init_type:str, rs:int):
     '''
-        Should always be called after _load_init.
+        Should always be called after _load_init didn't load.
     '''
     if rs not in GRAPH:
         GRAPH[rs] = {}
     if init_type not in GRAPH[rs]:
-        GRAPH[rs][init_type] = copy.deepcopy(env.world.tolist())
+        GRAPH[rs][init_type] = copy.deepcopy(env.world)
         with open(FILE_PATH, 'w') as json_data:
             json.dump(GRAPH, json_data)
 
@@ -63,7 +63,7 @@ def random_init(env: BaseGraphEnvironment, rs:int =-1):
     '''
 
     def init_func(): 
-        env.world = np.random.choice(env.num_types, env.world_size)
+        env.world = np.random.choice(env.num_types, env.world_size).tolist()
 
     if rs >= 0:
         loaded_world = _load_init(env, 'random_init', rs)
@@ -89,7 +89,7 @@ def block_init(env: BaseGraphEnvironment, rs:int = -1):
             world[i:i+block_size] = current_type
             current_type += 1
         world[i:] = current_type - 1
-        env.world = world
+        env.world = world.tolist()
 
     loaded_world = _load_init(env, 'block_init', 0)
     if not loaded_world:
@@ -114,6 +114,8 @@ def schelling_segregation_init(env: BaseGraphEnvironment, rs:int = -1):
         env.done = False
         env.utility = utility
         # env.dynamics = dynamics
+        world = env.toArray().tolist()
+        env.world = world
         
     if rs >= 0:
         loaded_world = _load_init(env, 'schelling_segregation_init', rs)

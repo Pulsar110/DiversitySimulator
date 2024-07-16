@@ -20,10 +20,12 @@ class Vertex:
             neigh_type_vector: neighbourhood-type vector (the number 
                                of vertex for each type in the vertex's open neighbourhood, 
                                i.e.: excluding itself)
+            utility: the utility value 
     '''
     loc_idx: Any = None
     type: Any = None
     neigh_type_vector: np.array = None
+    utility: float = 0
 
 
 class BaseGraphEnvironment(ABC):
@@ -146,7 +148,14 @@ class BaseGraphEnvironment(ABC):
             self.__current += 1
             return v
     ### end
-    
+
+    @abstractmethod
+    def toArray(self):
+        '''
+            List all the types.
+        '''
+        pass 
+
     @abstractmethod
     def get_immediate_neighbours(self, vertex: Vertex, as_dict=False):
         '''
@@ -207,11 +216,14 @@ class BaseGraphEnvironment(ABC):
             Return:
                 the scalar utility measure
         '''
-        if vertex.neigh_type_vector is None:
-            vertex.neigh_type_vector = self.get_neighborhood_type_vector(vertex)
+        # if vertex.neigh_type_vector is None:
+        vertex.neigh_type_vector = self.get_neighborhood_type_vector(vertex)
         if utility is None:
-            return self.utility.compute(vertex)
-        return utility.compute(vertex)
+            u = self.utility.compute(vertex)
+        else:
+            u =  utility.compute(vertex)
+        vertex.utility = u
+        return u
     
     def move_vertices(self, dynamic_output: DynamicsOutput):
         '''
@@ -245,7 +257,7 @@ class BaseGraphEnvironment(ABC):
             self.move_vertices(response)
             if self.verbosity > 0:
                 print('Moving vertex at', response.past_locations, 'to', response.new_locations)
-                print(self.world)
+                print(self.toArray())
             return True
         return False
         

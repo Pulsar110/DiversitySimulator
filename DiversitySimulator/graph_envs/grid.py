@@ -52,34 +52,46 @@ class GridWorld(BaseGraphEnvironment):
 
         for i in range(l-1):
             cur_size = np.prod(self.world_size[i+1:])
-            location_nD[i] = location_1D // cur_size
+            location_nD[i] = int(location_1D // cur_size)
             location_1D = location_1D % cur_size
-        location_nD[-1] = location_1D
+        location_nD[-1] = int(location_1D)
         return location_nD
+
+    def _get_vertex(self, loc_idx: list):
+        v = self.world
+        for idx in loc_idx:
+            v = v[idx]
+        return v
     
-    def get_vertex(self, loc_idx: int|list):
+    def get_vertex(self, loc_idx: int|list, init=True):
         if isinstance(loc_idx, int):
             loc_idx = self.__convert_index(loc_idx)
-        return Vertex(
+        v = self._get_vertex(loc_idx)
+        if not isinstance(v, Vertex):
+            v = Vertex(
                 loc_idx=loc_idx,
-                type=self.get_vertex_type(loc_idx)
+                type=v
             )
+            if init:
+                self.compute_utility(v)
+                location = self.world
+                for idx in loc_idx[:-1]:
+                    location = location[idx]
+                location[loc_idx[-1]] = v
+        return v
 
     def get_vertex_type(self, loc_idx: int|list):
-        if isinstance(loc_idx, int):
-            loc_idx = self.__convert_index(loc_idx)
-        v_type = self.world
-        for idx in loc_idx:
-            v_type = v_type[int(idx)]
-        return v_type
+        return self.get_vertex(loc_idx).type
 
     def set_vertex_type(self, given_type: int, loc_idx: int|list):
-        if isinstance(loc_idx, int):
-            loc_idx = self.__convert_index(loc_idx)
-        v_type = self.world
-        for idx in loc_idx[:-1]:
-            v_type = v_type[int(idx)]
-        v_type[int(loc_idx[-1])] = given_type
+        v = self.get_vertex(loc_idx)
+        v.type = given_type
+        self.compute_utility(v)
+        for n_v in self.get_immediate_neighbours(v):
+            self.compute_utility(n_v)
+
+    def toArray(self):
+        return np.reshape([v.type for v in self], self.world_size)
 
     def get_max_degree(self):
         return self.vertex_degree
@@ -179,7 +191,7 @@ class GridWorld(BaseGraphEnvironment):
         def __add_vertex(cur_idx, degree):
             cur_idx = self._wraped_index(cur_idx)
             if cur_idx is not None:
-                v = self.get_vertex(cur_idx)
+                v = self.get_vertex(cur_idx, init=False)
                 neigh_vertices[tuple(v.loc_idx)] = v
                 degree += 1
             return degree
@@ -224,11 +236,11 @@ class GridWorld(BaseGraphEnvironment):
     
     def save_snapshot(self, step_n, fig_name):
         fig, ax = plt.subplots()
-        if len(self.world.shape) == 1:
-            grid_world = np.tile(self.world, (2,1))
+        if len(self.world_size) == 1:
+            grid_world = np.tile(self.toArray(), (2,1))
             ax.imshow(grid_world)
         else:
-            ax.imshow(self.world)
+            ax.imshow(self.toArray())
         ax.set_title('Step: %d' % (step_n))
         plt.savefig(fig_name+'.png')
 
@@ -243,7 +255,7 @@ class GridWorld(BaseGraphEnvironment):
             print('Step', i)
             if i>0 and i<num_steps and self.step():
                 self.viz_metrics = self.compute_metric_summary(to_str=True)
-            ax.imshow(self.world)
+            ax.imshow(self.toArray())
             ax.set_title('Step: %d, %s' % (min(i, num_steps), self.viz_metrics))
             if i == num_steps:
                 self.save_snapshot(i, '%s_final'%(name))
