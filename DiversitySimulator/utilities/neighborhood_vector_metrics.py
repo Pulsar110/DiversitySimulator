@@ -6,6 +6,7 @@
 from __future__ import annotations
 import numpy as np
 from scipy.stats import entropy
+# from scipy.linalg import norm
 
 from utilities.base_utility import BaseUtility
 from typing import TYPE_CHECKING
@@ -106,7 +107,7 @@ class AntiSchellingSegregationUtility(SchellingSegregationUtility):
         return 1 - super().compute(vertex, thresh)
 
 
-class EntropyDivertiyUtility(BaseUtility):
+class EntropyDiversityUtility(BaseUtility):
     '''
         The entropy of the neighbours type distribution.
     '''
@@ -141,3 +142,56 @@ class EntropyDivertiyUtility(BaseUtility):
         
         q = neigh_type_vector / np.sum(neigh_type_vector)
         return entropy(q)
+
+
+class L2Utility(BaseUtility):
+    '''
+        Negative of the L2 (without the sqare root).
+        The higher the better for diversity.
+    '''
+    # def __init__(self):
+    #     self._best_case_val = -1
+    #     self._worst_case_val = -1
+
+    # def _worst_case(self, vertex: Vertex):
+    #     '''
+    #         E.G.: 5 types and 8 neighbours 
+    #         Worst case: [8,0,0,0,0]
+    #     '''
+    #     degree = np.sum(vertex.neigh_type_vector)
+    #     worst_v = np.zeros(vertex.neigh_type_vector.shape)
+    #     worst_v[0] = degree
+    #     return norm(worst_v) # compute L2 norm
+
+    # def _best_case(self, vertex: Vertex):
+    #     '''
+    #         Equivalent distribution of all type.
+    #         E.G.: 5 types and 8 neighbours 
+    #         Best case: [2,2,2,1,1]
+    #     '''
+    #     degree = int(np.sum(vertex.neigh_type_vector))
+    #     best_v = np.zeros(vertex.neigh_type_vector.shape)
+    #     idx = 0 
+    #     for i in range(degree):
+    #         best_v[idx] += 1
+    #         idx += 1
+    #         if idx == best_v.shape[0]:
+    #             idx = 0
+    #     return norm(best_v) # compute L2 norm
+
+    def best_case(self, vertex: Vertex):
+        return 0
+        # return 1
+    
+    def compute(self, vertex: Vertex):
+        return -np.sum(vertex.neigh_type_vector**2)
+        # q = norm(vertex.neigh_type_vector) # compute L2 norm
+
+        # # Compute best and worst case if not set yet
+        # if self._best_case_val == -1:
+        #     self._best_case_val = self._best_case(vertex)
+        #     self._worst_case_val = self._worst_case(vertex)
+
+        # # Rescale and normalize
+        # return (q-self._worst_case_val)/(self._best_case_val-self._worst_case_val)
+

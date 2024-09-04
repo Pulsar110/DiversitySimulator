@@ -8,7 +8,13 @@ from __future__ import annotations
 import numpy as np
 
 from utilities.neighborhood_vector_metrics import DifferenceCountDiversityUtility
-from utilities.neighborhood_vector_metrics import BinaryDiversityUtility, TypeCountingDiversityUtility, AntiSchellingSegregationUtility, EntropyDivertiyUtility
+from utilities.neighborhood_vector_metrics import (
+    BinaryDiversityUtility, 
+    TypeCountingDiversityUtility, 
+    AntiSchellingSegregationUtility, 
+    EntropyDiversityUtility,
+    L2Utility
+)
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -18,7 +24,8 @@ if TYPE_CHECKING:
 
 COUNT_DIFF_UTILITY = DifferenceCountDiversityUtility()
 COUNT_TYPE_UTILITY = TypeCountingDiversityUtility()
-DIVERSITY_UTILITIES = [BinaryDiversityUtility(), TypeCountingDiversityUtility(), DifferenceCountDiversityUtility(), EntropyDivertiyUtility()]
+L2_UTILITY = L2Utility()
+DIVERSITY_UTILITIES = [BinaryDiversityUtility(), TypeCountingDiversityUtility(), DifferenceCountDiversityUtility(), EntropyDiversityUtility()]
 
 
 def diff_degree_of_intergration(graph: BaseGraphEnvironment):
@@ -49,6 +56,23 @@ def type_degree_of_intergration(graph: BaseGraphEnvironment):
         count = int(graph.compute_utility(v, COUNT_TYPE_UTILITY))
         doi[:count] += 1
     return doi/graph.num_vertices
+
+
+def l2(graph: BaseGraphEnvironment):
+    '''
+        Sum of L2 utilities. 
+    '''
+    l2_utility_sum = 0
+    for v in graph:
+        l2_utility_sum += graph.compute_utility(v, L2_UTILITY)
+    best_case = np.ones(graph.num_types)
+    degree = graph.get_max_degree()
+    x = degree/graph.num_types
+    rem = int(degree - x*graph.num_types)
+    best_case *= np.floor(x)
+    best_case[:rem] += 1
+
+    return np.sum(best_case**2)/np.abs(l2_utility_sum)
 
 
 def percentage_of_segregated_verticies(graph: BaseGraphEnvironment, doi_1: float =-1):

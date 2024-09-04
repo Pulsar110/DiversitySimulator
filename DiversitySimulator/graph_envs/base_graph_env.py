@@ -283,3 +283,14 @@ class BaseGraphEnvironment(ABC):
         '''
         pass
          
+    def type_distribution(self):
+        '''
+            Get the type distribution.
+
+            Output:
+                list of number of vertices for each type
+        '''
+        type_dist = np.zeros(self.num_types, dtype=int)
+        for v in self:
+            type_dist[int(v.type)] += 1
+        return type_dist.tolist()

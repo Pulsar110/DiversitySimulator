@@ -257,3 +257,5 @@ class GridWorld(BaseGraphEnvironment):
                                         metadata=dict(artist='Diversity Simulator'),
                                         bitrate=1800)
         ani.save('%s_simulation.gif'%(name), writer=writer)
+
+    

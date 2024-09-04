@@ -5,12 +5,19 @@ from graph_envs.grid import GridWorld
 from graph_envs.grid_initializations import random_init
 from utilities.neighborhood_vector_metrics import TypeCountingDiversityUtility
 from dynamics.swap import RandomSwapper, UtilityOrderedSwapper, INDIVIDUAL_NO_WORSE
-from metrics.diversity_metrics import number_of_colorful_edges, diff_degree_of_intergration, type_degree_of_intergration, social_welfare, percentage_of_segregated_verticies
-from metrics.metrics import social_welfare_metric
+from metrics.diversity_metrics import (
+    number_of_colorful_edges, 
+    diff_degree_of_intergration, 
+    type_degree_of_intergration, 
+    social_welfare, 
+    # percentage_of_segregated_verticies,
+    l2
+)
+# from metrics.metrics import social_welfare_metric
 
 
 # METRICS = [social_welfare_metric, number_of_colorful_edges]
-METRICS = [social_welfare, diff_degree_of_intergration, type_degree_of_intergration, number_of_colorful_edges]
+METRICS = [social_welfare, diff_degree_of_intergration, type_degree_of_intergration, number_of_colorful_edges, l2]
 
 
 def CIRCLE_WORLD(world_size:int=400, verbosity:int=1, **kwargs):

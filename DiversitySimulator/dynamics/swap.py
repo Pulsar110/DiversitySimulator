@@ -52,10 +52,6 @@ class BaseSwapper(BaseDynamics):
         u21 = env.compute_utility(v21)
         env.move_vertices(self._swap(v12, v21))
 
-        if env.verbosity==2:
-            print('Swapping', v1, 'and', v2)
-            print('Old utilities:', u1, u2, '-> New utilities:', u12, u21)
-
         can_swap = False
         if self.swap_condition == INDIVIDUAL_NO_WORSE:
             can_swap = (u12 >= u1) and (u21 >= u2) and (u12 + u21) > (u1 + u2) 
@@ -63,6 +59,11 @@ class BaseSwapper(BaseDynamics):
             can_swap = (u12 + u21) > (u1 + u2)
         else: # swap_condition == INDIVIDUAL_GREATER
             can_swap = (u12 > u1) and (u21 > u2)
+
+        if can_swap and env.verbosity==2:
+            print('Swapping', v1, 'and', v2)
+            print('Old utilities:', u1, u2, '-> New utilities:', u12, u21)
+            
         return can_swap
 
     def _collective_wise_swap_condition(self, 
