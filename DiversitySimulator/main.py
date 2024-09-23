@@ -19,13 +19,25 @@ from utilities.neighborhood_vector_metrics import (
 
 # WORLDS = [CIRCLE_WORLD, CYLINDER_WORLD, GRID_4DEG_WORLD, GRID_8DEG_WORLD]
 WORLDS = [GRID_8DEG_WORLD]
-UTILITIES = [BinaryDiversityUtility, TypeCountingDiversityUtility, DifferenceCountDiversityUtility, EntropyDiversityUtility]
+UTILITIES = [
+    BinaryDiversityUtility, 
+    TypeCountingDiversityUtility, 
+    DifferenceCountDiversityUtility, 
+    # EntropyDiversityUtility
+    ]
 # UTILITIES = [AvgDiffTypeCountingDiversityUtility]
-INITIALIZATIONS = ['random_init', 'equitable_init', 'schelling_random_init', 'schelling_equitable_init'] #
+INITIALIZATIONS = [
+    'random_init', 
+    # 'equitable_init', 
+    # 'schelling_random_init', 
+    # 'schelling_equitable_init'
+    ] #
 SWAP_CONDS = [INDIVIDUAL_GREATER] #, INDIVIDUAL_NO_WORSE, SUM_GREATER]
 NUM_RUNS = 50
-NUM_TYPES = [2,3,4,5,6,7,8]
-WORLD_SIZE = [[10,10], [20,20], [30,30], [40,40]]
+NUM_TYPES = [7,8] # 3,4,5,6,
+WORLD_SIZE = [
+    [10,10], [20,20], [30,30], 
+    [40,40]]
 VERBOSE = 0
 
 for NUM_TYPE in NUM_TYPES:
