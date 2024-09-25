@@ -18,7 +18,8 @@ from utilities.neighborhood_vector_metrics import (
 
 
 # WORLDS = [CIRCLE_WORLD, CYLINDER_WORLD, GRID_4DEG_WORLD, GRID_8DEG_WORLD]
-WORLDS = [GRID_8DEG_WORLD]
+# WORLDS = [GRID_4DEG_WORLD, GRID_8DEG_WORLD]
+WORLDS = [CYLINDER_WORLD]
 UTILITIES = [
     BinaryDiversityUtility, 
     TypeCountingDiversityUtility, 
@@ -27,17 +28,20 @@ UTILITIES = [
     ]
 # UTILITIES = [AvgDiffTypeCountingDiversityUtility]
 INITIALIZATIONS = [
-    'random_init', 
-    # 'equitable_init', 
+    # 'random_init', 
+    'equitable_init', 
     # 'schelling_random_init', 
-    # 'schelling_equitable_init'
+    'schelling_equitable_init'
     ] #
 SWAP_CONDS = [INDIVIDUAL_GREATER] #, INDIVIDUAL_NO_WORSE, SUM_GREATER]
-NUM_RUNS = 50
-NUM_TYPES = [7,8] # 3,4,5,6,
+NUM_RUNS = 30
+NUM_TYPES = [3,4,5,6,7,8,9]
 WORLD_SIZE = [
-    [10,10], [20,20], [30,30], 
-    [40,40]]
+    #[10,10], 
+    # [20,20], #[30,30], 
+    #[40,40]
+    400
+    ]
 VERBOSE = 0
 
 for NUM_TYPE in NUM_TYPES:
@@ -56,11 +60,19 @@ for NUM_TYPE in NUM_TYPES:
     for world_class in WORLDS:
         for initialization, utility, swap_cond, world_size in get_combination():
             results = {}
-            filename = '%s_%s_%s_%s_(%dx%d)' % (world_class.__name__, 
+            world_size_str = '(%d)' % world_size
+            if world_class == CYLINDER_WORLD:
+                world_size = world_size//2
+                world_size_str = '(2x%d)' % (world_size)
+            elif world_class != CIRCLE_WORLD:
+                world_size = int(world_size**(1/2))
+                world_size_str = '(%dx%d)' % (world_size, world_size)
+                world_size = [world_size, world_size]                
+            filename = '%s_%s_%s_%s_%s' % (world_class.__name__, 
                                         initialization, 
                                         get_condition_name(swap_cond), 
                                         utility.__name__,
-                                        world_size[0], world_size[1])
+                                        world_size_str)
             print(filename)
             for i in range(NUM_RUNS):
                 kwargs = {
@@ -79,9 +91,9 @@ for NUM_TYPE in NUM_TYPES:
                 # if initialization == 'schelling_init':
                 #     schelling_segregation_init(world)
                 if i < 3:
-                    world.save_snapshot(0, '%s/step_plots/%s_%s_(%dx%d)_run_%d_step_0' % (ROOT, 
+                    world.save_snapshot(0, '%s/step_plots/%s_%s_%s_run_%d_step_0' % (ROOT, 
                                         world_class.__name__, initialization,
-                                        world_size[0], world_size[1], i))
+                                        world_size_str, i))
                 results[i] = {
                     'init': world.compute_metric_summary(),
                     'init_world': world.world.tolist(),
