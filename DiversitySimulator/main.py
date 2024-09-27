@@ -13,29 +13,31 @@ from utilities.neighborhood_vector_metrics import (
     AntiSchellingSegregationUtility, 
     EntropyDiversityUtility, 
     AvgDiffTypeCountingDiversityUtility,
-    L2Utility
+    L2Utility,
+    ClosedL2Utility
 )
 
 
 # WORLDS = [CIRCLE_WORLD, CYLINDER_WORLD, GRID_4DEG_WORLD, GRID_8DEG_WORLD]
+WORLDS = [GRID_4DEG_WORLD]
 # WORLDS = [GRID_4DEG_WORLD, GRID_8DEG_WORLD]
-WORLDS = [CYLINDER_WORLD]
 UTILITIES = [
-    BinaryDiversityUtility, 
-    TypeCountingDiversityUtility, 
-    DifferenceCountDiversityUtility, 
-    # EntropyDiversityUtility
+    # BinaryDiversityUtility, 
+    # TypeCountingDiversityUtility, 
+    # DifferenceCountDiversityUtility, 
+    # AvgDiffTypeCountingDiversityUtility
+    ClosedL2Utility
     ]
 # UTILITIES = [AvgDiffTypeCountingDiversityUtility]
 INITIALIZATIONS = [
     # 'random_init', 
-    'equitable_init', 
+    # 'equitable_init', 
     # 'schelling_random_init', 
     'schelling_equitable_init'
     ] #
 SWAP_CONDS = [INDIVIDUAL_GREATER] #, INDIVIDUAL_NO_WORSE, SUM_GREATER]
 NUM_RUNS = 30
-NUM_TYPES = [3,4,5,6,7,8,9]
+NUM_TYPES = [2,3,4,5,6,7,8,9]
 WORLD_SIZE = [
     #[10,10], 
     # [20,20], #[30,30], 

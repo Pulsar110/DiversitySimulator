@@ -63,16 +63,18 @@ def l2(graph: BaseGraphEnvironment):
         Sum of L2 utilities. 
     '''
     l2_utility_sum = 0
+    denom = 0
     for v in graph:
         l2_utility_sum += graph.compute_utility(v, L2_UTILITY)
+        denom += 1
     best_case = np.ones(graph.num_types)
     degree = graph.get_max_degree()
-    x = degree/graph.num_types
+    x = np.floor(degree/graph.num_types)
     rem = int(degree - x*graph.num_types)
-    best_case *= np.floor(x)
+    best_case *= x
     best_case[:rem] += 1
 
-    return np.sum(best_case**2)/np.abs(l2_utility_sum)
+    return np.sum(best_case**2)*denom/np.abs(l2_utility_sum)
 
 
 def percentage_of_segregated_verticies(graph: BaseGraphEnvironment, doi_1: float =-1):

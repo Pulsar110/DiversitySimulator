@@ -195,3 +195,12 @@ class L2Utility(BaseUtility):
         # # Rescale and normalize
         # return (q-self._worst_case_val)/(self._best_case_val-self._worst_case_val)
 
+
+class ClosedL2Utility(BaseUtility):
+    def best_case(self, vertex: Vertex):
+        return 0
+    
+    def compute(self, vertex: Vertex):
+        neigh_type_vector = np.copy(vertex.neigh_type_vector)
+        neigh_type_vector[vertex.type] += 1
+        return -np.sum(neigh_type_vector**2)

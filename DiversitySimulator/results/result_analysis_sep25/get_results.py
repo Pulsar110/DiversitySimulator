@@ -7,21 +7,29 @@ legend_label_map = {
     'social_welfare_1': 'soc. wel. (TypeCount)',
     'social_welfare_2': 'soc. wel. (DiffCount)',
     'social_welfare_3': 'soc. wel. (Entropy)',
-    'degree_of_intergration_0': 'DIO_1',
-    'degree_of_intergration_1': 'DIO_2',
-    'degree_of_intergration_2': 'DIO_3',
-    'degree_of_intergration_3': 'DIO_4',
-    'degree_of_intergration_4': 'DIO_5',
-    'degree_of_intergration_5': 'DIO_6',
-    'degree_of_intergration_6': 'DIO_7',
-    'degree_of_intergration_7': 'DIO_8',
+    'type_degree_of_intergration_0': 'DIO_T_1',
+    'type_degree_of_intergration_1': 'DIO_T_2',
+    'type_degree_of_intergration_2': 'DIO_T_3',
+    'type_degree_of_intergration_3': 'DIO_T_4',
+    'type_degree_of_intergration_4': 'DIO_T_5',
+    'type_degree_of_intergration_5': 'DIO_T_6',
+    'type_degree_of_intergration_6': 'DIO_T_7',
+    'type_degree_of_intergration_7': 'DIO_T_8',
+    'diff_degree_of_intergration_0': 'DIO_C_1',
+    'diff_degree_of_intergration_1': 'DIO_C_2',
+    'diff_degree_of_intergration_2': 'DIO_C_3',
+    'diff_degree_of_intergration_3': 'DIO_C_4',
+    'diff_degree_of_intergration_4': 'DIO_C_5',
+    'diff_degree_of_intergration_5': 'DIO_C_6',
+    'diff_degree_of_intergration_6': 'DIO_C_7',
+    'diff_degree_of_intergration_7': 'DIO_C_8',
     'percentage_of_segregated_verticies': '% of seg. vertices',
     'number_of_colorful_edges': '# colorful edges',
     'l2': 'evenness'
 }
 
 ROOT = '..'
-TYPES = [2,3,4,5,6,7,8]
+TYPES = [2,3,4,5,6,7,8,9]
 WORLDS = [('400', 'CIRCLE_WORLD'), ('2x200', 'CYLINDER_WORLD'), 
           ('20x20','GRID_4DEG_WORLD'), ('20x20', 'GRID_8DEG_WORLD')]
 # WORLDS = ['GRID_8DEG_WORLD']
@@ -30,9 +38,9 @@ UTILITIES = ['BinaryDiversityUtility', 'TypeCountingDiversityUtility',
              'AvgDiffTypeCountingDiversityUtility']
 INITIALIZATIONS = [
     'random_init', 
-    # 'equitable_init', 
+    'equitable_init', 
     'schelling_random_init', 
-    # 'schelling_equitable_init'
+    'schelling_equitable_init'
     ]
 SWAP_CONDS = ['individual_greater'] #, 'individual_no_worse', 'sum_greater']
 NUM_RUN = 30

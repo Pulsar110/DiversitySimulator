@@ -11,6 +11,9 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from dynamics.base_dynamic import DynamicsOutput
 
+COLORS = ['tab:blue','tab:orange','tab:green','tab:red','tab:purple',
+          'tab:brown','tab:pink','tab:gray','tab:olive','tab:cyan']
+
 
 class GridWorld(BaseGraphEnvironment):
     '''
@@ -224,13 +227,26 @@ class GridWorld(BaseGraphEnvironment):
     
     def save_snapshot(self, step_n, fig_name):
         fig, ax = plt.subplots()
-        if len(self.world.shape) == 1:
-            grid_world = np.tile(self.world, (2,1))
-            ax.imshow(grid_world)
+        if len(self.world_size) == 1 or self.world_size[0] == 2:
+            # polar graph
+            plt.subplot(111, polar=True)
+            if len(self.world_size) == 1:
+                grid = self.world.reshape((1,self.world.shape[0]))
+            else:
+                grid = self.world
+            bar_width = 2*np.pi/grid.shape[-1]
+            for h in range(grid.shape[0]):
+                for type_i in range(self.num_types):
+                    x = [i*bar_width for i in range(grid.shape[-1]) if grid[h][i] == type_i]
+                    plt.bar(x=x, height=1, width=bar_width, bottom=h+2, color=COLORS[type_i])
+            plt.xticks([], '')
+            plt.yticks([], '')
+            plt.ylim((0, grid.shape[0]+2))
         else:
             ax.imshow(self.world)
         ax.set_title('Step: %d' % (step_n))
         plt.savefig(fig_name+'.png')
+        plt.close()
 
     def visualize(self, num_steps:int, name:str=None):
         assert len(self.world_size) == 2
