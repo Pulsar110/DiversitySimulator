@@ -10,24 +10,28 @@ legend_label_map = {
     'social_welfare_1': 'soc. wel. (TypeCount)',
     'social_welfare_2': 'soc. wel. (DiffCount)',
     'social_welfare_3': 'soc. wel. (Entropy)',
-    'type_degree_of_intergration_-1': 'DIO_T (last)',
-    'diff_degree_of_intergration_-1': 'DIO_C (last)',
+    'type_degree_of_intergration_-1': 'DOIT(last)',
+    'diff_degree_of_intergration_-1': 'DOIC(last)',
     'percentage_of_segregated_verticies': '% of seg. vertices',
-    'number_of_colorful_edges': '# colorful edges',
-    'l2': 'evenness'
+    'number_of_colorful_edges': 'CE',
+    'l2': 'EV'
 }
 
 ROOT = '..'
 NUM_RUN = 30
 TYPES = [2,3,4,5,6,7,8,9]
-WORLDS = [('400', 'CIRCLE_WORLD'), ('2x200', 'CYLINDER_WORLD'),
-          ('20x20','GRID_4DEG_WORLD'), ('20x20', 'GRID_8DEG_WORLD')]
+WORLDS = [
+        # ('400', 'CIRCLE_WORLD'), 
+        #   ('2x200', 'CYLINDER_WORLD'),
+          ('20x20','GRID_4DEG_WORLD'), 
+          # ('20x20', 'GRID_8DEG_WORLD')
+          ]
 # WORLDS = [('20x20','GRID_4DEG_WORLD')]
 INITIALIZATIONS = [
-    'schelling_random_init', 
-    'random_init', 
-    # 'schelling_equitable_init',
-    # 'equitable_init'
+    # ('schelling_random_init', 'Random to Schelling Init'), 
+    # ('random_init', 'Random Init'), 
+    ('schelling_equitable_init', 'Equitable to Schelling Init'),
+    ('equitable_init', 'Equitable Init')
     ]
 
 UTILITIY_LABELS = {
@@ -35,19 +39,19 @@ UTILITIY_LABELS = {
     'TypeCountingDiversityUtility': 'Variety-seeking', 
     'DifferenceCountDiversityUtility': 'Difference-seeking', 
     'AvgDiffTypeCountingDiversityUtility': 'AvgDiffVarSeeking',
-    # 'L2Utility': 'Evenness-seeking'
+    'L2Utility': 'Evenness-seeking',
+    'ClosedL2Utility': 'Closed-evenness-seeking'
 }
 SWAP_CONDS = ['individual_greater']
 
-# focused_metrics = ['l2', 'number_of_colorful_edges']
-focused_metrics = ['type_degree_of_intergration_-1', 'diff_degree_of_intergration_-1']
+focused_metrics = ['l2', 'number_of_colorful_edges', 'type_degree_of_intergration_-1', 'diff_degree_of_intergration_-1']
 
 
 
 if True: # plot all utilities in each graph 
     UTILITIES = ['BinaryDiversityUtility', 'TypeCountingDiversityUtility', 
                  'DifferenceCountDiversityUtility', 'AvgDiffTypeCountingDiversityUtility',
-                 # 'L2Utility'
+                 'L2Utility', 'ClosedL2Utility'
                  ]
 
     def read_file(metric, world, world_size, initialization, utility, state='final'):
@@ -91,9 +95,9 @@ if True: # plot all utilities in each graph
         fig, ax = plt.subplots(1,2)
         y_min=1
         y_max=-1
-        for i, initialization in enumerate(INITIALIZATIONS):
+        for i, initialization_pair in enumerate(INITIALIZATIONS):
+            initialization, mod_initialization = initialization_pair
             for utility, line_data in iter_line(metric, world, world_size, initialization):
-                mod_initialization = initialization.replace('_',' ').replace('sche', 'Sche').replace('rand', 'Rand')
                 y = [line_data[x] for x in TYPES]
                 y_min = min(np.min(y), y_min)
                 y_max = max(np.max(y), y_max)
@@ -118,10 +122,10 @@ if True: # plot all utilities in each graph
         ax[1].legend(title='Utility', bbox_to_anchor=(1.0, 0.5))
         plt.suptitle('%s, %s' % (legend_label_map[metric], short_world))
         # plt.show()
-        plt.savefig('avg_plots/random_%s_%s.png' % (short_world, legend_label_map[metric]))
+        plt.savefig('avg_plots/with_EV_equitable_%s_%s.png' % (short_world, legend_label_map[metric]))
         plt.close()
 
-if True: # plot PoA for each graph 
+if False: # plot PoA for each graph 
     UTILITIES = ['BinaryDiversityUtility', 'TypeCountingDiversityUtility', 
                  'DifferenceCountDiversityUtility']
     UTILITY_SW_MAP = {
@@ -132,8 +136,8 @@ if True: # plot PoA for each graph
 
     def iter_graphs():
         for utility in UTILITIES:
-            for initialization in INITIALIZATIONS:
-                yield utility, initialization
+            for initialization, mod_initialization in INITIALIZATIONS:
+                yield utility, initialization, mod_initialization
 
     def read_file(world, world_size, initialization, utility):
         line_data = {}
@@ -161,8 +165,7 @@ if True: # plot PoA for each graph
             line_data = read_file(world, world_size, initialization, utility)
             yield world, short_utility, line_data
 
-    for utility, initialization in iter_graphs():
-        mod_initialization = initialization.replace('_',' ').replace('sche', 'Sche').replace('rand', 'Rand')
+    for utility, initialization, mod_initialization in iter_graphs():
         fig, ax = plt.subplots(1,2)
         y_max = 1
         for world, utility, line_data in iter_line(utility, initialization):
