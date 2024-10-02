@@ -4,7 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 plt.rcParams["figure.figsize"] = (15,5)
 
-
 legend_label_map = {
     'social_welfare_0': 'SW(Binary)',
     'social_welfare_1': 'SW(TypeCount)',
@@ -16,6 +15,10 @@ legend_label_map = {
     'type_degree_of_intergration_3': 'DOIT(4)',
     'type_degree_of_intergration_-1': 'DOIT(last)',
     'diff_degree_of_intergration_-1': 'DOIC(last)',
+    'diff_degree_of_intergration_0': 'DOIC(1)',
+    'diff_degree_of_intergration_1': 'DOIC(2)',
+    'diff_degree_of_intergration_2': 'DOIC(3)',
+    'diff_degree_of_intergration_3': 'DOIC(4)',
     'percentage_of_segregated_verticies': '% of seg. vertices',
     'number_of_colorful_edges': 'CE',
     'l2': 'EV'
@@ -23,10 +26,10 @@ legend_label_map = {
 
 ROOT = '..'
 NUM_RUN = 30
-TYPES = [2,3,4,5,6,7]#,8,9]
+TYPES = [5,6,7]#,8,9]
 WORLDS = [
-        ('900', 'CIRCLE_WORLD'), 
-          ('2x450', 'CYLINDER_WORLD'),
+        # ('900', 'CIRCLE_WORLD'), 
+        #   ('2x450', 'CYLINDER_WORLD'),
           ('30x30','GRID_4DEG_WORLD'), 
           # ('20x20', 'GRID_8DEG_WORLD')
           ]
@@ -44,14 +47,28 @@ UTILITIY_LABELS = {
     # 'L2Utility': 'Evenness-seeking',
     # 'ClosedL2Utility': 'Closed-evenness-seeking'
 }
+
+UTILITIY_MARKERS = {
+    'BinaryDiversityUtility': 'o', 
+    'TypeCountingDiversityUtility': '^', 
+    'DifferenceCountDiversityUtility': '*', 
+    'AvgDiffTypeCountingDiversityUtility': 's',
+    # 'L2Utility': 'Evenness-seeking',
+    # 'ClosedL2Utility': 'Closed-evenness-seeking'
+}
+
 SWAP_CONDS = ['individual_greater']
 
 if True: # plot avg
-    focused_metrics = ['social_welfare_1']
-    # focused_metrics = ['type_degree_of_intergration_-1', 'diff_degree_of_intergration_-1']
-    # focused_metrics = ['type_degree_of_intergration_3']
+    # focused_metrics = ['social_welfare_0', 'social_welfare_2','social_welfare_1',
+    #                    'type_degree_of_intergration_-1', 'diff_degree_of_intergration_-1',
+    #                    'number_of_colorful_edges', 'l2']
+    focused_metrics = ['type_degree_of_intergration_3']
+    # focused_metrics = ['diff_degree_of_intergration_0', 'diff_degree_of_intergration_1', 
+    #                    'diff_degree_of_intergration_2', 'diff_degree_of_intergration_3']
     UTILITIES = ['BinaryDiversityUtility', 'TypeCountingDiversityUtility', 
-                 'DifferenceCountDiversityUtility', 'AvgDiffTypeCountingDiversityUtility',
+                 'DifferenceCountDiversityUtility', 
+                 # 'AvgDiffTypeCountingDiversityUtility',
                  # 'L2Utility', 'ClosedL2Utility'
                  ]
 
@@ -87,9 +104,9 @@ if True: # plot avg
                 
             short_utility = UTILITIY_LABELS[utility]
             line_data = read_file(metric, world, world_size, initialization, utility)
-            yield short_utility, line_data
+            yield short_utility, UTILITIY_MARKERS[utility], line_data
         line_data = read_file(metric, world, world_size, initialization, utility, state='init')
-        yield 'init', line_data
+        yield 'init', None, line_data
 
     for metric, world, world_size in iter_graphs(): 
         short_world = world.replace('_WORLD', '')
@@ -98,19 +115,19 @@ if True: # plot avg
         y_max=-1
         for i, initialization_pair in enumerate(INITIALIZATIONS):
             initialization, mod_initialization = initialization_pair
-            for utility, line_data in iter_line(metric, world, world_size, initialization):
+            for utility, utility_marker, line_data in iter_line(metric, world, world_size, initialization):
                 y = [line_data[x] for x in TYPES]
                 y_min = min(np.min(y), y_min)
                 y_max = max(np.max(y), y_max)
                 if utility == 'init':
                     utility = mod_initialization
                     if i == 1:
-                        ax[1].plot(TYPES, y, '--', color='black', label=utility)
-                        ax[0].plot(TYPES, y, '--', color='black', label=utility)
+                        ax[1].plot(TYPES, y, '--', color='black', label=utility, marker='+', markersize=10)
+                        ax[0].plot(TYPES, y, '--', color='black', label=utility, marker='+', markersize=10)
                     else:
-                        ax[1-i].plot(TYPES, y, '-.', color='red', label=utility)
+                        ax[1-i].plot(TYPES, y, '-.', color='red', label=utility, marker='x', markersize=10)
                 else:
-                    ax[1-i].plot(TYPES, y, label=utility)
+                    ax[1-i].plot(TYPES, y, label=utility, marker=utility_marker, markersize=10)
             ax[1-i].set_xlabel('Number of types')
             ax[1-i].set_ylabel('Metric: %s' % legend_label_map[metric])
             ax[1-i].set_title(mod_initialization)
@@ -208,59 +225,59 @@ if False: # plot PoA for each graph
         plt.close()
 
 
+# if False: #social welfare
+#     UTILITIES = ['BinaryDiversityUtility', 'TypeCountingDiversityUtility', 
+#                  'DifferenceCountDiversityUtility']
+#     UTILITY_SW_MAP = {
+#         'BinaryDiversityUtility': 0, 
+#         'TypeCountingDiversityUtility': 1, 
+#         'DifferenceCountDiversityUtility': 2
+#     }
 
-    # UTILITIES = ['BinaryDiversityUtility', 'TypeCountingDiversityUtility', 
-    #              'DifferenceCountDiversityUtility']
-    # UTILITY_SW_MAP = {
-    #     'BinaryDiversityUtility': 0, 
-    #     'TypeCountingDiversityUtility': 1, 
-    #     'DifferenceCountDiversityUtility': 2
-    # }
+#     def iter_graphs():
+#         for utility in UTILITIES:
+#             for initialization, mod_initialization in INITIALIZATIONS:
+#                 yield utility, initialization, mod_initialization
 
-    # def iter_graphs():
-    #     for utility in UTILITIES:
-    #         for initialization, mod_initialization in INITIALIZATIONS:
-    #             yield utility, initialization, mod_initialization
+#     def read_file(world, world_size, initialization, utility):
+#         line_data = {}
+#         for num_type in TYPES:
+#             swap_cond = SWAP_CONDS[0]
+#             with open('%s/%d_types/%s_%s_%s_%s_(%s)_results_.json' % (ROOT, 
+#                                                                      num_type,
+#                                                                      world,
+#                                                                      initialization, 
+#                                                                      swap_cond, 
+#                                                                      utility,
+#                                                                      world_size), 'r') as jsonfile:
+#                 data = json.load(jsonfile)
 
-    # def read_file(world, world_size, initialization, utility):
-    #     line_data = {}
-    #     for num_type in TYPES:
-    #         swap_cond = SWAP_CONDS[0]
-    #         with open('%s/%d_types/%s_%s_%s_%s_(%s)_results_.json' % (ROOT, 
-    #                                                                  num_type,
-    #                                                                  world,
-    #                                                                  initialization, 
-    #                                                                  swap_cond, 
-    #                                                                  utility,
-    #                                                                  world_size), 'r') as jsonfile:
-    #             data = json.load(jsonfile)
+#             ce = np.array([d['final']['number_of_colorful_edges'] for d in data.values()])
+#             poa = np.array([d['final']['social_welfare'][UTILITY_SW_MAP[utility]] for d in data.values()])
+#             line_data[num_type] = {'PoA(CE)': np.mean(ce, axis=0),
+#                                    'PoA(SW)': np.mean(poa, axis=0)}
 
-    #         ce = np.array([d['final']['number_of_colorful_edges'] for d in data.values()])
-    #         poa = np.array([d['final']['social_welfare'][UTILITY_SW_MAP[utility]] for d in data.values()])
-    #         line_data[num_type] = {'PoA(CE)': np.mean(ce, axis=0),
-    #                                'PoA(SW)': np.mean(poa, axis=0)}
+#         return line_data
 
-    #     return line_data
+#     def iter_line(utility, initialization):
+#         for world_size, world in WORLDS:
+#             short_utility = UTILITIY_LABELS[utility]
+#             line_data = read_file(world, world_size, initialization, utility)
+#             yield world, short_utility, line_data
 
-    # def iter_line(utility, initialization):
-    #     for world_size, world in WORLDS:
-    #         short_utility = UTILITIY_LABELS[utility]
-    #         line_data = read_file(world, world_size, initialization, utility)
-    #         yield world, short_utility, line_data
-
-    # for utility, initialization, mod_initialization in iter_graphs():
-    #     fig, ax = plt.subplots(1,2)
-    #     y_max = 1
-    #     for world, utility, line_data in iter_line(utility, initialization):
-    #         for i, sub_title in enumerate(['PoA(CE)', 'PoA(SW)']):
-    #             y = [1.0/line_data[x][sub_title] for x in TYPES]
-    #             world = world.replace('_WORLD', '')
-    #             ax[i].plot(TYPES, y, label=world)
-    #             y_max = max(np.max(y), y_max)
-    #     for i, sub_title in enumerate(['PoA(CE)', 'PoA(SW)']):
-    #         ax[i].set_xlabel('Number of types')
-    #         ax[i].set_ylabel(sub_title)
-    #         ax[i].legend(title='Graph')
-    #     plt.suptitle('%s, %s' % (utility, mod_initialization))
-    #     plt.savefig('poa_plots/PoA_%s_%s.png' % (utility, initialization))
-    #     plt.close()
+#     for utility, initialization, mod_initialization in iter_graphs():
+#         fig, ax = plt.subplots(1,2)
+#         y_max = 1
+#         for world, utility, line_data in iter_line(utility, initialization):
+#             for i, sub_title in enumerate(['PoA(CE)', 'PoA(SW)']):
+#                 y = [1.0/line_data[x][sub_title] for x in TYPES]
+#                 world = world.replace('_WORLD', '')
+#                 ax[i].plot(TYPES, y, label=world)
+#                 y_max = max(np.max(y), y_max)
+#         for i, sub_title in enumerate(['PoA(CE)', 'PoA(SW)']):
+#             ax[i].set_xlabel('Number of types')
+#             ax[i].set_ylabel(sub_title)
+#             ax[i].legend(title='Graph')
+#         plt.suptitle('%s, %s' % (utility, mod_initialization))
+#         plt.savefig('poa_plots/PoA_%s_%s.png' % (utility, initialization))
+#         plt.close()
