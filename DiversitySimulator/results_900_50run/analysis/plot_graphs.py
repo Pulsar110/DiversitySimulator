@@ -25,7 +25,7 @@ legend_label_map = {
 }
 
 ROOT = '..'
-NUM_RUN = 30
+NUM_RUN = 50
 TYPES = [5,6,7]#,8,9]
 WORLDS = [
         # ('900', 'CIRCLE_WORLD'), 
