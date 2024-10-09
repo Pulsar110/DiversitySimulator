@@ -13,7 +13,7 @@ legend_label_map = {
 
 ROOT = '..'
 NUM_RUN = 50
-TYPES = [2,3,4,5,6,7]
+TYPES = [2,3,4,5,6,7,8,9]
 WORLDS = [
         # ('900', 'CIRCLE_WORLD'), 
         # ('2x450', 'CYLINDER_WORLD'),
@@ -97,6 +97,7 @@ if True: # plot avg
     for world_size, world in WORLDS: 
         short_world = world.replace('_WORLD', '')
         fig, ax = plt.subplots(len(INITIALIZATIONS),len(focused_metrics))
+        fig.subplots_adjust(bottom=0.17, left=0.04, top=0.95, right=0.99)
         for i, initialization_pair in enumerate(INITIALIZATIONS):
             for utility, utility_marker, line_data in iter_line(world, world_size, initialization_pair):
                 for m_i, metric in enumerate(focused_metrics):
@@ -134,6 +135,6 @@ if True: # plot avg
         plt.legend([handles[idx] for idx in order],[labels[idx] for idx in order], ncol=5, bbox_to_anchor=(0.25, -0.25))
         # ax[-1,-1].legend([handles[idx] for idx in order],[labels[idx] for idx in order], title='Legend', bbox_to_anchor=(1.0, 0.8))
         # plt.suptitle('%s' % (short_world))
-        plt.show()
-        # plt.savefig('avg_plots/degree4_large.png')
-        # plt.close()
+        # plt.show()
+        plt.savefig('avg_plots/degree4_large.png')
+        plt.close()
