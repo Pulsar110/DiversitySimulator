@@ -1,0 +1,228 @@
+Utility: social_welfare_0
+Metric: BinaryDiversityUtility
+GRID_4DEG_WORLD, 30x30, 9 types, random_init, value: 0.9998888888888888
+GRID_4DEG_WORLD, 30x30, 7 types, random_init, value: 0.9997407407407407
+GRID_4DEG_WORLD, 30x30, 6 types, random_init, value: 0.9997407407407407
+GRID_4DEG_WORLD, 30x30, 8 types, random_init, value: 0.9997037037037036
+GRID_4DEG_WORLD, 30x30, 5 types, random_init, value: 0.9993703703703704
+GRID_4DEG_WORLD, 30x30, 6 types, schelling_random_init, value: 0.9991851851851852
+GRID_4DEG_WORLD, 30x30, 7 types, schelling_random_init, value: 0.9988518518518519
+GRID_4DEG_WORLD, 30x30, 4 types, random_init, value: 0.9986296296296296
+GRID_4DEG_WORLD, 30x30, 9 types, schelling_random_init, value: 0.9986296296296295
+GRID_4DEG_WORLD, 30x30, 8 types, schelling_random_init, value: 0.9985925925925925
+GRID_4DEG_WORLD, 30x30, 5 types, schelling_random_init, value: 0.9984444444444445
+GRID_4DEG_WORLD, 30x30, 3 types, random_init, value: 0.9981481481481481
+GRID_4DEG_WORLD, 30x30, 4 types, schelling_random_init, value: 0.9977037037037035
+GRID_4DEG_WORLD, 30x30, 3 types, schelling_random_init, value: 0.9970740740740741
+GRID_4DEG_WORLD, 30x30, 2 types, random_init, value: 0.9919629629629629
+GRID_4DEG_WORLD, 30x30, 2 types, schelling_random_init, value: 0.9804814814814815
+
+Utility: number_of_colorful_edges
+Metric: BinaryDiversityUtility
+GRID_4DEG_WORLD, 30x30, 9 types, random_init, value: 0.8907777777777778
+GRID_4DEG_WORLD, 30x30, 8 types, random_init, value: 0.8756666666666668
+GRID_4DEG_WORLD, 30x30, 7 types, random_init, value: 0.8572222222222223
+GRID_4DEG_WORLD, 30x30, 6 types, random_init, value: 0.8334074074074074
+GRID_4DEG_WORLD, 30x30, 5 types, random_init, value: 0.8002592592592592
+GRID_4DEG_WORLD, 30x30, 4 types, random_init, value: 0.7562592592592592
+GRID_4DEG_WORLD, 30x30, 3 types, random_init, value: 0.6839074074074073
+GRID_4DEG_WORLD, 30x30, 2 types, schelling_random_init, value: 0.6010370370370369
+GRID_4DEG_WORLD, 30x30, 2 types, random_init, value: 0.5885555555555555
+GRID_4DEG_WORLD, 30x30, 3 types, schelling_random_init, value: 0.5630000000000001
+GRID_4DEG_WORLD, 30x30, 4 types, schelling_random_init, value: 0.5439814814814814
+GRID_4DEG_WORLD, 30x30, 5 types, schelling_random_init, value: 0.5292777777777778
+GRID_4DEG_WORLD, 30x30, 6 types, schelling_random_init, value: 0.5261296296296296
+GRID_4DEG_WORLD, 30x30, 8 types, schelling_random_init, value: 0.524925925925926
+GRID_4DEG_WORLD, 30x30, 7 types, schelling_random_init, value: 0.5238888888888888
+GRID_4DEG_WORLD, 30x30, 9 types, schelling_random_init, value: 0.5236851851851853
+
+Utility: social_welfare_1
+Metric: BinaryDiversityUtility
+GRID_4DEG_WORLD, 30x30, 2 types, random_init, value: 0.9919629629629629
+GRID_4DEG_WORLD, 30x30, 2 types, schelling_random_init, value: 0.9804814814814815
+GRID_4DEG_WORLD, 30x30, 3 types, random_init, value: 0.8102592592592592
+GRID_4DEG_WORLD, 30x30, 9 types, random_init, value: 0.7527314814814815
+GRID_4DEG_WORLD, 30x30, 8 types, random_init, value: 0.7253796296296298
+GRID_4DEG_WORLD, 30x30, 7 types, random_init, value: 0.6883333333333332
+GRID_4DEG_WORLD, 30x30, 4 types, random_init, value: 0.6864567901234567
+GRID_4DEG_WORLD, 30x30, 3 types, schelling_random_init, value: 0.6491296296296298
+GRID_4DEG_WORLD, 30x30, 6 types, random_init, value: 0.6466759259259258
+GRID_4DEG_WORLD, 30x30, 5 types, random_init, value: 0.5890462962962963
+GRID_4DEG_WORLD, 30x30, 4 types, schelling_random_init, value: 0.4761728395061716
+GRID_4DEG_WORLD, 30x30, 9 types, schelling_random_init, value: 0.42696296296296293
+GRID_4DEG_WORLD, 30x30, 8 types, schelling_random_init, value: 0.4144722222222222
+GRID_4DEG_WORLD, 30x30, 7 types, schelling_random_init, value: 0.40484259259259264
+GRID_4DEG_WORLD, 30x30, 6 types, schelling_random_init, value: 0.38946296296296296
+GRID_4DEG_WORLD, 30x30, 5 types, schelling_random_init, value: 0.37666666666666665
+
+Utility: l2
+Metric: BinaryDiversityUtility
+GRID_4DEG_WORLD, 30x30, 2 types, random_init, value: 0.7882039102295911
+GRID_4DEG_WORLD, 30x30, 9 types, random_init, value: 0.7493442937285631
+GRID_4DEG_WORLD, 30x30, 3 types, random_init, value: 0.7477993297954687
+GRID_4DEG_WORLD, 30x30, 2 types, schelling_random_init, value: 0.7321361860323908
+GRID_4DEG_WORLD, 30x30, 8 types, random_init, value: 0.7282740370674311
+GRID_4DEG_WORLD, 30x30, 7 types, random_init, value: 0.6982358050412198
+GRID_4DEG_WORLD, 30x30, 6 types, random_init, value: 0.6659820249146275
+GRID_4DEG_WORLD, 30x30, 3 types, schelling_random_init, value: 0.6405552911782862
+GRID_4DEG_WORLD, 30x30, 5 types, random_init, value: 0.6237385850547065
+GRID_4DEG_WORLD, 30x30, 4 types, random_init, value: 0.5718392615442842
+GRID_4DEG_WORLD, 30x30, 9 types, schelling_random_init, value: 0.5270556100652395
+GRID_4DEG_WORLD, 30x30, 8 types, schelling_random_init, value: 0.5111671639433577
+GRID_4DEG_WORLD, 30x30, 7 types, schelling_random_init, value: 0.5018572619759761
+GRID_4DEG_WORLD, 30x30, 6 types, schelling_random_init, value: 0.4856403602349662
+GRID_4DEG_WORLD, 30x30, 5 types, schelling_random_init, value: 0.4737061088275132
+GRID_4DEG_WORLD, 30x30, 4 types, schelling_random_init, value: 0.45461283337899333
+
+Utility: social_welfare_0
+Metric: TypeCountingDiversityUtility
+GRID_4DEG_WORLD, 30x30, 9 types, schelling_random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 9 types, random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 8 types, schelling_random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 8 types, random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 7 types, schelling_random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 7 types, random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 6 types, schelling_random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 6 types, random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 5 types, schelling_random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 4 types, schelling_random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 4 types, random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 5 types, random_init, value: 0.9999629629629629
+GRID_4DEG_WORLD, 30x30, 3 types, random_init, value: 0.9995185185185186
+GRID_4DEG_WORLD, 30x30, 3 types, schelling_random_init, value: 0.9991111111111111
+GRID_4DEG_WORLD, 30x30, 2 types, random_init, value: 0.9919629629629629
+GRID_4DEG_WORLD, 30x30, 2 types, schelling_random_init, value: 0.9804814814814815
+
+Utility: number_of_colorful_edges
+Metric: TypeCountingDiversityUtility
+GRID_4DEG_WORLD, 30x30, 9 types, random_init, value: 0.999351851851852
+GRID_4DEG_WORLD, 30x30, 9 types, schelling_random_init, value: 0.9992222222222222
+GRID_4DEG_WORLD, 30x30, 8 types, random_init, value: 0.9989259259259261
+GRID_4DEG_WORLD, 30x30, 8 types, schelling_random_init, value: 0.9988518518518519
+GRID_4DEG_WORLD, 30x30, 7 types, random_init, value: 0.9986296296296298
+GRID_4DEG_WORLD, 30x30, 7 types, schelling_random_init, value: 0.9984814814814816
+GRID_4DEG_WORLD, 30x30, 6 types, random_init, value: 0.9978148148148149
+GRID_4DEG_WORLD, 30x30, 6 types, schelling_random_init, value: 0.9973518518518519
+GRID_4DEG_WORLD, 30x30, 5 types, schelling_random_init, value: 0.9953518518518518
+GRID_4DEG_WORLD, 30x30, 5 types, random_init, value: 0.9953333333333334
+GRID_4DEG_WORLD, 30x30, 4 types, schelling_random_init, value: 0.9886851851851852
+GRID_4DEG_WORLD, 30x30, 4 types, random_init, value: 0.9863333333333333
+GRID_4DEG_WORLD, 30x30, 3 types, schelling_random_init, value: 0.9260555555555555
+GRID_4DEG_WORLD, 30x30, 3 types, random_init, value: 0.911037037037037
+GRID_4DEG_WORLD, 30x30, 2 types, schelling_random_init, value: 0.6010370370370369
+GRID_4DEG_WORLD, 30x30, 2 types, random_init, value: 0.5885555555555555
+
+Utility: social_welfare_1
+Metric: TypeCountingDiversityUtility
+GRID_4DEG_WORLD, 30x30, 2 types, random_init, value: 0.9919629629629629
+GRID_4DEG_WORLD, 30x30, 2 types, schelling_random_init, value: 0.9804814814814815
+GRID_4DEG_WORLD, 30x30, 3 types, random_init, value: 0.9155925925925926
+GRID_4DEG_WORLD, 30x30, 3 types, schelling_random_init, value: 0.8801666666666667
+GRID_4DEG_WORLD, 30x30, 9 types, random_init, value: 0.8210370370370369
+GRID_4DEG_WORLD, 30x30, 8 types, random_init, value: 0.7995833333333332
+GRID_4DEG_WORLD, 30x30, 4 types, random_init, value: 0.7939012345678983
+GRID_4DEG_WORLD, 30x30, 7 types, random_init, value: 0.7693703703703704
+GRID_4DEG_WORLD, 30x30, 4 types, schelling_random_init, value: 0.7488024691358007
+GRID_4DEG_WORLD, 30x30, 9 types, schelling_random_init, value: 0.7429814814814815
+GRID_4DEG_WORLD, 30x30, 6 types, random_init, value: 0.7295092592592592
+GRID_4DEG_WORLD, 30x30, 8 types, schelling_random_init, value: 0.7171759259259259
+GRID_4DEG_WORLD, 30x30, 7 types, schelling_random_init, value: 0.6960370370370369
+GRID_4DEG_WORLD, 30x30, 5 types, random_init, value: 0.6719166666666667
+GRID_4DEG_WORLD, 30x30, 6 types, schelling_random_init, value: 0.6615555555555556
+GRID_4DEG_WORLD, 30x30, 5 types, schelling_random_init, value: 0.6214814814814814
+
+Utility: l2
+Metric: TypeCountingDiversityUtility
+GRID_4DEG_WORLD, 30x30, 2 types, random_init, value: 0.7882039102295911
+GRID_4DEG_WORLD, 30x30, 2 types, schelling_random_init, value: 0.7321361860323908
+GRID_4DEG_WORLD, 30x30, 9 types, random_init, value: 0.7193652384776333
+GRID_4DEG_WORLD, 30x30, 8 types, random_init, value: 0.6942244863965646
+GRID_4DEG_WORLD, 30x30, 7 types, random_init, value: 0.6591930818687947
+GRID_4DEG_WORLD, 30x30, 3 types, random_init, value: 0.6447554388953862
+GRID_4DEG_WORLD, 30x30, 6 types, random_init, value: 0.6164050159468363
+GRID_4DEG_WORLD, 30x30, 9 types, schelling_random_init, value: 0.6105748376683127
+GRID_4DEG_WORLD, 30x30, 3 types, schelling_random_init, value: 0.5994564587844612
+GRID_4DEG_WORLD, 30x30, 8 types, schelling_random_init, value: 0.5845237495589182
+GRID_4DEG_WORLD, 30x30, 7 types, schelling_random_init, value: 0.5642981768335508
+GRID_4DEG_WORLD, 30x30, 5 types, random_init, value: 0.5614315319494576
+GRID_4DEG_WORLD, 30x30, 6 types, schelling_random_init, value: 0.5335029648657186
+GRID_4DEG_WORLD, 30x30, 5 types, schelling_random_init, value: 0.5030314906681291
+GRID_4DEG_WORLD, 30x30, 4 types, random_init, value: 0.49888870025484594
+GRID_4DEG_WORLD, 30x30, 4 types, schelling_random_init, value: 0.4602909213881396
+
+Utility: social_welfare_0
+Metric: DifferenceCountDiversityUtility
+GRID_4DEG_WORLD, 30x30, 9 types, schelling_random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 9 types, random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 8 types, schelling_random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 8 types, random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 7 types, schelling_random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 7 types, random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 6 types, schelling_random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 6 types, random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 5 types, schelling_random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 5 types, random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 4 types, schelling_random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 4 types, random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 3 types, schelling_random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 3 types, random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 2 types, schelling_random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 2 types, random_init, value: 1.0
+
+Utility: number_of_colorful_edges
+Metric: DifferenceCountDiversityUtility
+GRID_4DEG_WORLD, 30x30, 9 types, random_init, value: 0.9995740740740742
+GRID_4DEG_WORLD, 30x30, 9 types, schelling_random_init, value: 0.9995370370370372
+GRID_4DEG_WORLD, 30x30, 8 types, random_init, value: 0.9994444444444445
+GRID_4DEG_WORLD, 30x30, 8 types, schelling_random_init, value: 0.9993333333333335
+GRID_4DEG_WORLD, 30x30, 7 types, schelling_random_init, value: 0.9992962962962965
+GRID_4DEG_WORLD, 30x30, 7 types, random_init, value: 0.9992962962962965
+GRID_4DEG_WORLD, 30x30, 6 types, random_init, value: 0.9990555555555558
+GRID_4DEG_WORLD, 30x30, 6 types, schelling_random_init, value: 0.9990185185185185
+GRID_4DEG_WORLD, 30x30, 5 types, random_init, value: 0.9985925925925928
+GRID_4DEG_WORLD, 30x30, 5 types, schelling_random_init, value: 0.9982592592592595
+GRID_4DEG_WORLD, 30x30, 4 types, random_init, value: 0.9964814814814815
+GRID_4DEG_WORLD, 30x30, 4 types, schelling_random_init, value: 0.9958333333333333
+GRID_4DEG_WORLD, 30x30, 3 types, schelling_random_init, value: 0.9779074074074074
+GRID_4DEG_WORLD, 30x30, 3 types, random_init, value: 0.9683518518518518
+GRID_4DEG_WORLD, 30x30, 2 types, schelling_random_init, value: 0.9007407407407407
+GRID_4DEG_WORLD, 30x30, 2 types, random_init, value: 0.8884074074074074
+
+Utility: social_welfare_1
+Metric: DifferenceCountDiversityUtility
+GRID_4DEG_WORLD, 30x30, 2 types, schelling_random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 2 types, random_init, value: 1.0
+GRID_4DEG_WORLD, 30x30, 3 types, random_init, value: 0.8840555555555555
+GRID_4DEG_WORLD, 30x30, 3 types, schelling_random_init, value: 0.8269444444444445
+GRID_4DEG_WORLD, 30x30, 9 types, random_init, value: 0.8155185185185184
+GRID_4DEG_WORLD, 30x30, 8 types, random_init, value: 0.792537037037037
+GRID_4DEG_WORLD, 30x30, 4 types, random_init, value: 0.7754074074074052
+GRID_4DEG_WORLD, 30x30, 7 types, random_init, value: 0.759962962962963
+GRID_4DEG_WORLD, 30x30, 6 types, random_init, value: 0.7220555555555558
+GRID_4DEG_WORLD, 30x30, 4 types, schelling_random_init, value: 0.6891481481481476
+GRID_4DEG_WORLD, 30x30, 9 types, schelling_random_init, value: 0.6871574074074075
+GRID_4DEG_WORLD, 30x30, 8 types, schelling_random_init, value: 0.6663148148148147
+GRID_4DEG_WORLD, 30x30, 5 types, random_init, value: 0.6639166666666667
+GRID_4DEG_WORLD, 30x30, 7 types, schelling_random_init, value: 0.6431666666666668
+GRID_4DEG_WORLD, 30x30, 6 types, schelling_random_init, value: 0.6107685185185185
+GRID_4DEG_WORLD, 30x30, 5 types, schelling_random_init, value: 0.5762037037037037
+
+Utility: l2
+Metric: DifferenceCountDiversityUtility
+GRID_4DEG_WORLD, 30x30, 9 types, random_init, value: 0.7110645738109916
+GRID_4DEG_WORLD, 30x30, 8 types, random_init, value: 0.6835496886589125
+GRID_4DEG_WORLD, 30x30, 7 types, random_init, value: 0.6459351967997339
+GRID_4DEG_WORLD, 30x30, 6 types, random_init, value: 0.6050663575885769
+GRID_4DEG_WORLD, 30x30, 2 types, random_init, value: 0.584884899481038
+GRID_4DEG_WORLD, 30x30, 3 types, random_init, value: 0.5796242496661541
+GRID_4DEG_WORLD, 30x30, 2 types, schelling_random_init, value: 0.5728985470532061
+GRID_4DEG_WORLD, 30x30, 5 types, random_init, value: 0.5475298047456952
+GRID_4DEG_WORLD, 30x30, 9 types, schelling_random_init, value: 0.5436019356111046
+GRID_4DEG_WORLD, 30x30, 3 types, schelling_random_init, value: 0.5329155145919723
+GRID_4DEG_WORLD, 30x30, 8 types, schelling_random_init, value: 0.5235461951581438
+GRID_4DEG_WORLD, 30x30, 7 types, schelling_random_init, value: 0.5035413019295049
+GRID_4DEG_WORLD, 30x30, 4 types, random_init, value: 0.476928561864144
+GRID_4DEG_WORLD, 30x30, 6 types, schelling_random_init, value: 0.47633600903053647
+GRID_4DEG_WORLD, 30x30, 5 types, schelling_random_init, value: 0.45211758508860667
+GRID_4DEG_WORLD, 30x30, 4 types, schelling_random_init, value: 0.41215443483159053
+
