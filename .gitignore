@@ -2,5 +2,6 @@ __pycache__
 DiversitySimulator/graph_envs/graph_inits
 DiversitySimulator/results/*_types
 results*/*_types
+results*/size*/*_types/*_results_.json
 
 
