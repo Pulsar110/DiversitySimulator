@@ -35,12 +35,12 @@ Metrics
 
 Utilities
 - Neighborhood vector metrics
-    - BinaryDiversityUtility: 1 if one of its neighbours is a different type than itself, 0 otherwise.
-    - DifferenceCountDiversityUtility: Count the number of neighbours with different type than itself.
-    - TypeCountingDiversityUtility: Count the number of different types in the close neighborhood without counting its own type.
-    - SchellingSegregationUtility: The fraction of its neighours that are the same type than itself. If there is a threshold, then it is a binary value indicating whether the fraction is larger than the threshold.
+    - BinaryDiversityUtility: 1 if one of its neighbours is a different type to itself, 0 otherwise.
+    - DifferenceCountDiversityUtility: Count the number of neighbours with different type to itself.
+    - TypeCountingDiversityUtility: Count the number of different types in the neighborhood without counting its own type.
+    - SchellingSegregationUtility: The fraction of its neighours that are the same type to itself. If there is a threshold, then it is a binary value indicating whether the fraction is larger than the threshold.
     - AntiSchellingSegregationUtility (not used): The fraction of its neighours that are not the same type than itself.
-    - EntropyDivertiyUtility: The entropy of the neighbours type distribution.
+    - EntropyDivertiyUtility: The entropy of the type distribution in the closed neighbourhood.
 
 ### Experiments
 - Setups
@@ -52,12 +52,12 @@ Utilities
     - Swap conditions: INDIVIDUAL_GREATER
     - Utilities: BinaryDiversityUtility, TypeCountingDiversityUtility, DifferenceCountDiversityUtility
 
-- Metrics (diversity metrics)
-    - social_welfare
-    - degree_of_intergration
-    - percentage_of_segregated_verticies
-    - number_of_colorful_edges
-    - l2
+- Metrics (diversity metrics) used are renamed as follow:
+    - percentage_of_segregated_verticies (not used)
+    - social_welfare (binary): DoI (degree of intergration: DoI1 = fraction of vertices with at least 1 neighbour of a different type to itself)
+    - social_welfare (type counting): NV (neighbourhood variety)
+    - number_of_colorful_edges (or social welfare of difference counting): CE (colorful edges)
+    - l2: EV (eveness)
 
 - Number of runs: 30, 50
 
