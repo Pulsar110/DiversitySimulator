@@ -4,7 +4,7 @@
 Dynamics
 - Swap
     - RandomSwapper: Randomly select a pair of vertices and swap them if both of their utilities can.
-    - UtilityOrderedSwapper: Iterate by priority based on the utility of the vertex.
+    - UtilityOrderedSwapper: Iterate by priority based on the utility of the vertex. Small utility first. 
 - Swap conditions:
     - INDIVIDUAL_GREATER: swap if both new utilities are greater. 
     - INDIVIDUAL_NO_WORSE: swap if both new utilities are equal or greater and at least one is greater. 
@@ -23,23 +23,22 @@ Graph Initializations
 	- shelling_random_init: Apply Schelling algorithm on top of random_init.
     - shelling_equitable_init: Apply Schelling algorithm on top of equitable_init.
 
-
 Metrics
 - social_welfare_metric: Sum of utilities of vertex in the graph environment. 
-- diversity_metrics
+- diversity_metrics (all normalized between 0 and 1, the larger the better)
     - degree_of_intergration: DOI_k, the percentage of vertices with at least k neighbouring vertices of a different type to itself.
     - percentage_of_segregated_verticies: Percentage of vertices in the graph with no neighbour of different type.
-    - number_of_colorful_edges: The percentage of colorful edges, that is, connections between vertices of different type.
+    - number_of_colorful_edges: The percentage of colorful edges, that is, connections between vertices of different type. It is normalized by the best case (total number of edges). 
     - social_welfare: Sum of utilities compared with the best and worst case.
-    - l2: Inverse of the sum of eveness of the open neighbourhood multiplied by the best case 
-    - closed_l2: l2 but computed with the closed neighbourhood
+    - l2: Inverse of the sum of eveness of the open neighbourhood multiplied by the best case. 
+    - closed_l2: l2 but computed with the closed neighbourhood.
 
 Utilities
 - Neighborhood vector metrics
     - BinaryDiversityUtility: 1 if one of its neighbours is a different type than itself, 0 otherwise.
     - DifferenceCountDiversityUtility: Count the number of neighbours with different type than itself.
     - TypeCountingDiversityUtility: Count the number of different types in the close neighborhood without counting its own type.
-    - SchellingSegregationUtility: The fraction of its neighours that are the same type than itself. 
+    - SchellingSegregationUtility: The fraction of its neighours that are the same type than itself. If there is a threshold, then it is a binary value indicating whether the fraction is larger than the threshold.
     - AntiSchellingSegregationUtility (not used): The fraction of its neighours that are not the same type than itself.
     - EntropyDivertiyUtility: The entropy of the neighbours type distribution.
 
