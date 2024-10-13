@@ -1,6 +1,6 @@
-# DiversitySimulator v2
-
+# DiversitySimulator v1
 ### Modules
+
 Dynamics
 - Swap
     - RandomSwapper: Randomly select a pair of vertices and swap them if both of their utilities can.
@@ -18,10 +18,8 @@ Graph Environments
 Graph Initializations
 - Grid Initialization
     - random_init: Random type assignment in the world.
-    - equitable_init: Randomly distribute equitable amount of types in the world.
+    - block_init: Assign the types in blocks.
 - Shelling initialization
-	- shelling_random_init: Apply Schelling algorithm on top of random_init.
-    - shelling_equitable_init: Apply Schelling algorithm on top of equitable_init.
 
 Metrics
 - social_welfare_metric: Sum of utilities of vertex in the graph environment. 
@@ -30,8 +28,6 @@ Metrics
     - percentage_of_segregated_verticies: Percentage of vertices in the graph with no neighbour of different type.
     - number_of_colorful_edges: The percentage of colorful edges, that is, connections between vertices of different type.
     - social_welfare: Sum of utilities compared with the best and worst case.
-    - l2: Inverse of the sum of eveness of the open neighbourhood multiplied by the best case 
-    - closed_l2: l2 but computed with the closed neighbourhood
 
 Utilities
 - Neighborhood vector metrics
@@ -44,21 +40,26 @@ Utilities
 
 ### Experiments
 - Setups
-    - Worlds: CIRCLE_WORLD(900), CYLINDER_WORLD(2,450), GRID_4DEG_WORLD(30,30), GRID_8DEG_WORLD(30,30)
+    - Worlds: CIRCLE_WORLD(400), CYLINDER_WORLD(2,200), GRID_4DEG_WORLD(20,20), GRID_8DEG_WORLD(20,20)
     - Types: 2-9
-    - Initilialization: random_init, equitable_init, schelling_random_init, schelling_equitable_init
+    - Initilialization: random_init, block_init, shelling initialization 
     - Swap: UtilityOrderedSwapper
-    - Swap conditions: INDIVIDUAL_GREATER
-    - Utilities: BinaryDiversityUtility, TypeCountingDiversityUtility, DifferenceCountDiversityUtility
+    - Swap conditions: INDIVIDUAL_GREATER, INDIVIDUAL_NO_WORSE, SUM_GREATER
+    - Utilities: BinaryDiversityUtility, TypeCountingDiversityUtility, DifferenceCountDiversityUtility, EntropyDivertiyUtility
 
 - Metrics (diversity metrics)
     - social_welfare
     - degree_of_intergration
     - percentage_of_segregated_verticies
     - number_of_colorful_edges
-    - l2
 
-- Number of runs: 30
+- Number of runs: 10
 
 ### Results
-Result are in the `results_<time>` directories. 
+Result plots are in the `results/<initialization type>/<swap condition>/plots` directories. We are plotting the metric values against the different utitlities used. The points represent each of the 10 experiment runs for each utility evaluated on each metric, and the largest point represents the mean over 10 runs.
+
+The title contains:
+- `init`: the evaluation at the time right after the graph is initialized.
+- `final`: the evaluation at the time when equilibrum is attained.
+- `difference(final-init)`: the difference between the `final` and the `init`.
+- "mean steps" list the average number of steps to attain equilibrum for each utility.
