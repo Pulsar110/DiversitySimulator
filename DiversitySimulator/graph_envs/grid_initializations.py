@@ -79,14 +79,6 @@ def random_init(env:BaseGraphEnvironment, rs:int =-1):
     def init_func(): 
         env.world = np.random.choice(env.num_types, env.world_size)
     _initialize_func(env, rs, 'random_init', init_func)
-    # if rs >= 0:
-    #     loaded_world = _load_init(env, 'random_init', rs)
-    #     if not loaded_world:
-    #         np.random.seed(seed=rs)
-    #         init_func()
-    #         _save_init(env, 'random_init', rs)
-    # else:
-    #     init_func()
 
 
 def equitable_init(env: BaseGraphEnvironment, rs:int = -1):
@@ -124,14 +116,6 @@ def _schelling_segregation_init(env: BaseGraphEnvironment, rs:int,
         # env.dynamics = dynamics
     _initialize_func(env, rs, 'schelling_segregation_%s'%rand_func.__name__, init_func)
     
-    # if rs >= 0:
-    #     loaded_world = _load_init(env, 'schelling_segregation_init', rs)
-    #     if not loaded_world:
-    #         init_func()
-    #         _save_init(env, 'schelling_segregation_init', rs)
-    # else:
-    #     init_func()
-
 
 def schelling_segregation_random_init(env: BaseGraphEnvironment, rs:int=-1):
     '''

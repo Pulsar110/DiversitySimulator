@@ -17,11 +17,12 @@ Graph Environments
 
 Graph Initializations
 - Grid Initialization
-    - random_init: Random type assignment in the world.
-    - equitable_init: Randomly distribute equitable amount of types in the world.
-- Shelling initialization
+    - random_init: Random type assignment in the world. Choose the type from uniform distribution between 0 and `number_of_types`-1.
+    - equitable_init: Randomly distribute equitable amount of types in the world. Randomly permute all indices of the vertices in the world, then assign type one after another such that we have the number of vertices for each type differ by at most 1.
+- Shelling initialization after random or equitable initialzation, run the Schelling segregation algorithm. Swap according to SchellingSegregationUtility (no threshold).
 	- shelling_random_init: Apply Schelling algorithm on top of random_init.
     - shelling_equitable_init: Apply Schelling algorithm on top of equitable_init.
+
 
 Metrics
 - social_welfare_metric: Sum of utilities of vertex in the graph environment. 
@@ -44,7 +45,8 @@ Utilities
 
 ### Experiments
 - Setups
-    - Worlds: CIRCLE_WORLD(900), CYLINDER_WORLD(2,450), GRID_4DEG_WORLD(30,30), GRID_8DEG_WORLD(30,30)
+    - Worlds: CIRCLE_WORLD, CYLINDER_WORLD, GRID_4DEG_WORLD, GRID_8DEG_WORLD
+    - World size: 400, 900
     - Types: 2-9
     - Initilialization: random_init, equitable_init, schelling_random_init, schelling_equitable_init
     - Swap: UtilityOrderedSwapper
@@ -58,7 +60,10 @@ Utilities
     - number_of_colorful_edges
     - l2
 
-- Number of runs: 30
+- Number of runs: 30, 50
 
 ### Results
 Result are in the `results_<time>` directories. 
+
+- results_may_2024: with EntropyDivertiyUtility, random initialization, without l2 metric
+- results_oct_2024: without EntropyDivertiyUtility, with random and equitable initialization, with l2 metric

@@ -49,7 +49,7 @@ def type_degree_of_intergration(graph: BaseGraphEnvironment):
         types that are different to itself.
 
         Return:
-            vector of DOI_k from k = 1 to number of type - 1
+            vector of DOI_k from k = 1 to min(number of type - 1, degree)
     '''
     doi = np.zeros(min(graph.num_types-1, graph.get_max_degree()))
     for v in graph:
@@ -63,10 +63,8 @@ def l2(graph: BaseGraphEnvironment):
         Sum of L2 utilities. 
     '''
     l2_utility_sum = 0
-    denom = 0
     for v in graph:
         l2_utility_sum += graph.compute_utility(v, L2_UTILITY)
-        denom += 1
     best_case = np.ones(graph.num_types)
     degree = graph.get_max_degree()
     x = np.floor(degree/graph.num_types)
@@ -74,7 +72,7 @@ def l2(graph: BaseGraphEnvironment):
     best_case *= x
     best_case[:rem] += 1
 
-    return np.sum(best_case**2)*denom/np.abs(l2_utility_sum)
+    return np.sum(best_case**2)*graph.num_vertices/np.abs(l2_utility_sum)
 
 
 def percentage_of_segregated_verticies(graph: BaseGraphEnvironment, doi_1: float =-1):

@@ -18,37 +18,37 @@ from utilities.neighborhood_vector_metrics import (
 )
 
 
-# WORLDS = [CIRCLE_WORLD, CYLINDER_WORLD, GRID_4DEG_WORLD, GRID_8DEG_WORLD]
-WORLDS = [GRID_4DEG_WORLD]
-# WORLDS = [GRID_4DEG_WORLD, GRID_8DEG_WORLD]
+WORLDS = [
+          # CIRCLE_WORLD, 
+          # CYLINDER_WORLD, 
+          GRID_4DEG_WORLD, 
+          # GRID_8DEG_WORLD
+          ]
 UTILITIES = [
     # BinaryDiversityUtility, 
-    # TypeCountingDiversityUtility, 
-    # DifferenceCountDiversityUtility, 
+    TypeCountingDiversityUtility, 
+    DifferenceCountDiversityUtility, 
     # AvgDiffTypeCountingDiversityUtility
-    ClosedL2Utility
+    # ClosedL2Utility
     ]
-# UTILITIES = [AvgDiffTypeCountingDiversityUtility]
 INITIALIZATIONS = [
     # 'random_init', 
     # 'equitable_init', 
-    # 'schelling_random_init', 
-    'schelling_equitable_init'
+    'schelling_random_init', 
+    # 'schelling_equitable_init'
     ] #
 SWAP_CONDS = [INDIVIDUAL_GREATER] #, INDIVIDUAL_NO_WORSE, SUM_GREATER]
-NUM_RUNS = 30
+NUM_RUNS = 50
 NUM_TYPES = [2,3,4,5,6,7,8,9]
 WORLD_SIZE = [
-    #[10,10], 
-    # [20,20], #[30,30], 
-    #[40,40]
-    400
+    # 400,
+    900
     ]
 VERBOSE = 0
 
 for NUM_TYPE in NUM_TYPES:
     ROOT = 'results/%d_types' % (NUM_TYPE)
-    Path('%s/plots' % (ROOT)).mkdir(parents=True, exist_ok=True)
+    # Path('%s/plots' % (ROOT)).mkdir(parents=True, exist_ok=True)
     Path('%s/step_plots' % (ROOT)).mkdir(parents=True, exist_ok=True)
 
     def get_combination():
